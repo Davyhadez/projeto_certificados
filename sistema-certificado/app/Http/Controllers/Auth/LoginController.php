@@ -23,13 +23,14 @@ class LoginController extends Controller
         ]);
 
         $user = DB::table('usuario')
-            ->where('login_usuario', $request->login_usuario)
-            ->first();
+            -> where('login_usuario', $request->login_usuario)
+            -> 
+            first();
 
         if ($user && md5($request -> password) === $user -> senha_usuario) { #tranforma em formato MD5 para comparar com o banco de dados
             
             if ($user -> ativo != 1) {
-                return back()->withErrors([
+                return back() -> withErrors([
                 'login_usuario' => "Usuário ou senha inválidos.",
                 ]);
             }
@@ -41,7 +42,7 @@ class LoginController extends Controller
             return redirect() -> intended('dashboard');
         }
 
-        return back()->withErrors([
+        return back() -> withErrors([
             'login_usuario' => "Usuário ou senha inválidos.",
         ]);
     }

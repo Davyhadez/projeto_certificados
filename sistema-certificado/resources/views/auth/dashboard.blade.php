@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <title>Sistema de Certificados - DETRAN-PA</title>
     <style>
@@ -90,50 +91,35 @@
             <h2 class="text-center mb-4 mt-2 fw-bold">Sistema de Certificados</h2>
             <ul>
                 <li class="nav-item">
-                    <a href="#" class="nav-link active">Home <i class="bi bi-house-door-fill"></i></a>
+                    <a href="{{ route('dashboard') }}" class="nav-link active fw-bold"><i class="bi bi-house-door-fill"></i> Home</a>
                 </li>
                 <hr style="color: #e0e9ff">
-                <li class="nav-item">
-                    <button class="nav-link w-100 border-0 text-white shadow-none" 
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#menuCadastro"
-                    aria-expanded="false"
-                    style="background-color: rgba(255, 255, 255, 0.1);">
-                    Cadastrar
-                    </button>
 
-                    <div class="collapse mt-1" id="menuCadastro">
-                        <div class="bg-white rounded p-2">
-                            <a href="#" class="d-block text-dark text-decoration-none py-1 border-bottom fw-bold">Pessoas</a>
-                            <a href="#" class="d-block text-dark text-decoration-none py-1 border-bottom fw-bold">Eventos</a>
-                            <a href="#" class="d-block text-dark text-decoration-none py-1 border-bottom fw-bold">Turmas</a>
+                <li class="nav-item">
+
+                        <div class="rounded p-2" style="background-color: rgba(255, 255, 255, 0.1);">
+                            <a href="{{ route('usuarios.index') }}" class="d-block text-white text-decoration-none py-1 fw-bold">Lista de Usuários</a>
                         </div>
-                    </div>
+
                 </li>
-                <li class="nav-item">
-                    <button class="nav-link w-100 border-0 text-white shadow-none" 
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#menuCadastro1"
-                    aria-expanded="false"
-                    style="background-color: rgba(255, 255, 255, 0.1);">
-                    Consultar
-                    </button>
 
-                    <div class="collapse mt-1" id="menuCadastro1">
-                        <div class="bg-white rounded p-2">
-                            <a href="#" class="d-block text-dark text-decoration-none py-1 border-bottom fw-bold">Pessoas</a>
-                            <a href="#" class="d-block text-dark text-decoration-none py-1 border-bottom fw-bold">Eventos</a>
-                            <a href="#" class="d-block text-dark text-decoration-none py-1 border-bottom fw-bold">Turmas</a>
+                <li class="nav-item">
+
+                        <div class="rounded p-2" style="background-color: rgba(255, 255, 255, 0.1);">
+                            <a href="{{ route('pessoas.index') }}" class="d-block text-white text-decoration-none py-1 fw-bold">Lista de Pessoas</a>
                         </div>
-                    </div>
+
                 </li>
             </ul>
         </div>
 
         <div class="main-content">
-            <nav class="navbar top-navbar px-4 py-2 d-flex justify-content-end">
+            <nav class="navbar top-navbar px-4 py-2 d-flex justify-content-between align-items-center">
+
+                <div>
+                    <a id="nav-left">
+                    @yield('voltarPessoas')
+                </div>
                 
                 <div class="d-flex align-items-center">
                     <span class="me-3 fw-bold text-uppercase">
@@ -147,12 +133,19 @@
             </nav>
 
             <div class="container-fluid p-5">
+                    {{-- 1. Se existir uma @section('conteudo'), mostre-a --}}
+                    @if(View::hasSection('conteudo'))
+                        @yield('conteudo')
+    
+                        {{-- 2. Se NÃO existir (ou seja, se for a Home), mostre a logo --}}
+                     @else
                 <div class="card shadow p-3 mb-5 bg-body rounded border-0 p-5 text-center">
                     <h2 class="fw-bold">Seja bem-vindo ao sistema de certificados</h2>
                     <div>
                         <img src="https://www.motoragora.com.br/wp-content/uploads/2023/01/Detran-PA-1024x576.jpg" alt="logo" class="detran">
                     </div>
-                </div>
+                </div> 
+                    @endif
             </div>
         </div>
     </div>
