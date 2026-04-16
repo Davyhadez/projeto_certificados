@@ -9,6 +9,16 @@
         </a>
     @endsection
 
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+    
     <style>
 
         .form-control:focus, .form-select:focus {
@@ -19,7 +29,7 @@
 
     </style>
 
-    <div class="card shadow-sm border-1 p-4">
+    <div class="row justify-content-center"> <div class="col-md-6"> <div class="card shadow-sm border p-4">
 
         <div class="card-header bg-white py-3">
             <h3 class="fw-bold mb-4 justify-content-center d-flex" style="color: teal !important;">
@@ -27,50 +37,54 @@
             </h3>
         </div>
 
-        <form action="#" method="POST">
+        <form action="{{ route('usuarios.store') }}" method="POST" autocomplete="off">
             @csrf
             <div class="row">
 
-                <div class="col-md-6 mb-3">
+
+                {{-- CAMPO COM O NOME DA PESSOA --}}
+                <div class="row-md-6 mb-3">
                     <label class="form-label fw-bold" for="nome" >Nome da Pessoa</label>
-                    <select name="id_pessoa" id="nome" class="form-control">
-                        <option value="#" disabled selected>Selecione a pessoa</option>
+                    <select name="id_pessoa" id="nome" class="form-control select-busca">
+                        <option value="" disabled selected>Selecione a pessoa</option>
                         @foreach($pessoas as $p)
                             <option value="{{ $p->id_pessoa }}">{{ $p->nome_pessoa }}</option>
                         @endforeach
                     </select>
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="row-md-6 mb-3">
                     <label class="form-label fw-bold" for="login">Login</label>
-                    <input type="text" name="login" id="login" class="form-control" placeholder="Nome de login" required>
+                    <input type="text" name="login_usuario" id="login" class="form-control" placeholder="Nome de login" required>
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="row-md-6 mb-3">
                     <label class="form-label fw-bold" for="senha">Senha</label>
-                    <input type="password" name="senha" id="senha" class="form-control" placeholder="Digite a senha" required>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold" for="confSenha">Confirmar Senha</label>
-                    <input type="password" name="confSenha" id="confSenha" class="form-control" required>
+                    <input type="password" name="senha_usuario" id="senha" class="form-control" placeholder="Digite a senha" required>
                 </div>
 
                 <div class="col-md-6 mb-3">
 
-                    <label class="form-label fw-bold" for="tipo_pessoa">Tipo de Pessoa</label>
+                    <label class="form-label fw-bold" for="tipo_usuario">Tipo de Usuário</label>
 
-                        <select name="id_tipo_pessoa" id="tipo_pessoa" class="form-control">
+                        <select name="id_tipo_usuario" id="tipo_usuario" class="form-control">
 
                             <option value="#" disabled selected>Selecione o tipo</option>
-                            <option value="1">Detran</option>
-                            <option value="2">Estagiário</option>
-                            <option value="3">Prefeitura</option>
-                            <option value="4">Terceirizado</option>
-                            <option value="5">Outros</option>
-
+                            <option value="1">Administrador</option>
+                            <option value="2">Treinamento</option>
+                            <option value="3">Gabinete</option>
                         </select>
 
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-bold" for="ativo">Status</label>
+                    <select name="ativo" id="ativo" class="form-control">
+                        <option value="#" disabled selected>Selecione um tipo</option>
+                        <option value="1">Ativo (1)</option>
+                        <option value="0">Inativo (0)</option>
+                    </select>
                 </div>
                 
             </div>
@@ -83,5 +97,19 @@
             
         </form>
     </div>
-
+    <script>
+        $(document).ready(function() {
+            $('.select-busca').select2({
+                placeholder: "Digite por sobrenome...",
+                allowClear: true,
+                width: '100%',
+                dropwdownAutoWidth: true,
+                language: {
+                    noResults: function() {
+                        return "Nenhum resultado encontrado";
+                    }
+                }
+            });
+        });
+    </script>
 @endsection

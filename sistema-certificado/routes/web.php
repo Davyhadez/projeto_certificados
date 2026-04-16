@@ -16,28 +16,60 @@ Route::get('/dashboard', function () {
 })->middleware('auth')->name('dashboard');
 
 // --- ROTAS DE USUÁRIO ---
+
+
 // Lista de Usuários
 Route::get('/usuarios', [UsuarioController::class, 'index'])
     ->middleware('auth')
     ->name('usuarios.index');
 
-// Formulário de Cadastro de Usuário (AQUI ESTAVA O ERRO DO ESPAÇO)
+
+Route::put('/usuarios/{id_usuario}', [UsuarioController::class, 'update'])
+    ->name('usuarios.update');
+
+
 Route::get('/usuarios/cadastrar', [UsuarioController::class, 'create'])
     ->middleware('auth')
     ->name('usuarios.create');
 
 
+Route::post('/usuarios/salvar', [UsuarioController::class, 'store'])
+    ->name('usuarios.store');
+
+
+Route::get('/usuario/{id}/historico', [UsuarioController::class, 'show'])
+    ->middleware('auth')
+    ->name('usuarios.historico');
+
+
 // --- ROTAS DE PESSOA ---
+
+
 Route::get('/listaPessoa', [PessoaController::class, 'index'])
     ->middleware('auth')
     ->name('pessoas.index');
+
 
 Route::get('/cadastrar-pessoa', [PessoaController::class, 'create'])
     ->middleware('auth')
     ->name('pessoas.create');
 
+
+Route::put('pessoas/{id_pessoa}', [PessoaController::class, 'update'])
+    ->name('pessoas.update');
+
+
 Route::delete('pessoas/{id_pessoa}', [PessoaController::class, 'destroy'])
     ->name('pessoas.destroy');
+
+
+Route::post('/pessoas/salvar', [PessoaController::class, 'store'])
+    ->name('pessoas.store');
+
+
+Route::get('/pessoa/{id}/historico', [PessoaController::class, 'show'])
+    ->middleware('auth')
+    ->name('pessoas.historico');
 
 
 // --- AUTENTICAÇÃO ---

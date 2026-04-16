@@ -74,3 +74,35 @@
     transform: translateY(-2px); 
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
+
+.pagination-container nav div:first-child p {
+    margin-right: 20px;
+}
+
+.pagination-container nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #008080 !important;
+    border-color: #008080 !important;
+    color: white !important;
+}
+
+.pagination .page-link {
+    color: #008080 !important;
+    border-color: #b3b3b3 !important;
+}
+
+.select2-container--default .select2-selection--single {
+    height: 38px !important;
+    border: 1px solid #dee2e6 !important;
+    padding-top: 5px;
+}
+.select2-container--default .select2-selection__arrow {
+    height: 36px !important;
+}
+

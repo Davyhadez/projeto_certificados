@@ -80,6 +80,15 @@
         }
     </style>
 
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm"
+             role="alert"
+             style="background-color: #d1e7dd; color: #0f5132;">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="card shadow-sm border-1 p-3">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -146,14 +155,33 @@
 
                                 <div class="d-flex justify-content-center gap-2">
 
-                                    <button type="button" class="btn btn-outline-info">Histórico</button>
-                                    <button type="button" class="btn btn-outline-secondary">Editar</button>
+                                    <a href="{{ route('pessoas.historico', $p ->id_pessoa) }}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-eye"></i>
+                                            Histórico
+                                    </a>
+                                    <button type="button"
+                                        class="btn btn-outline-info btn-editar"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEditar"
+                                        data-id="{{ $p -> id_pessoa }}"
+                                        data-cpf="{{ $p -> cpf }}"
+                                        data-nome="{{ $p -> nome_pessoa }}"
+                                        data-data_nascimento="{{ $p -> data_nascimento }}"
+                                        data-sexo="{{ $p -> sexo }}"
+                                        data-matricula="{{ $p -> matricula }}"
+                                        data-lotacao="{{ $p->id_lotacao }}"
+                                        data-tipo_pessoa="{{ $p -> id_tipo_pessoa }}"
+                                        data-ativo="{{ $p -> ativo }}">
+                                        <i class="bi bi-pencil-square"></i>
+                                            Editar
+                                    </button>
                                     
                                     <form action="{{ route('pessoas.destroy', $p->id_pessoa) }}" method="POST" class="m-0" onsubmit="return confirm('Tem certeza que deseja excluir?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger">
-                                            Danger
+                                            <i class="bi bi-trash"></i>
+                                            Deletar
                                         </button>
                                     </form>
 
@@ -165,9 +193,120 @@
                 </tbody>
             </table>
         </div>
-
+        <div class="d-flex justify-content-center mt-5 mb-3 pagination-container">
+            {{ $pessoas->links() }}
+        </div>
     </div>
+    <div class="modal fade" id="modalEditar" tabindex="1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" style="color: teal;">Editar Pessoa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="#" id="formEditarPessoa" method="POST">
+                    @csrf
+                    @method('PUT')     
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editCPF" class="form-label fw-bold">CPF</label>
+                            <input type="text" name="cpf" id="editCPF" class="form-control" placeholder="Digite o CPF" required>                                
+                        </div>
+                        <div class="mb-3">
+                            <label for="editNome" class="form-label fw-bold">Nome Completo</label>
+                            <input type="text" name="nome_pessoa" id="editNome" class="form-control" placeholder="Digite o nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDataNascimento" class="form-label fw-bold">Data de Nascimento</label>
+                            <input type="date" name="data_nascimento" id="editDataNascimento" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editSexo" class="form-label fw-bold">Sexo</label>
+                            <select name="sexo" id="editSexo" class="form-control">
+                                <option value="M">Masculino</option>
+                                <option value="F">Feminino</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMatricula" class="form-label fw-bold">Matrícula</label>
+                            <input type="text" name="matricula" id="editMatricula" class="form-control" placeholder="Digite a matrícula" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editLotacao" class="form-label fw-bold">Lotação</label>
+                            <select name="id_lotacao" id="editLotacao" class="form-control">
+                                @foreach($lotacoes as $l)
+                                    <option value="{{ $l->id_lotacao }}">{{ $l->nome_lotacao }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editTipoPessoa" class="form-label fw-bold">Tipo de Pessoa</label>
+                            <select name="id_tipo_pessoa" id="editTipoPessoa" class="form-control">
+                                <option value="1">Detran</option>
+                                <option value="2">Estagiário</option>
+                                <option value="3">Prefeitura</option>
+                                <option value="4">Terceirizado</option>
+                                <option value="5">Outros</option>
+                            </select>
+                        </div>
 
+                        <div class="mb-3">
+                            <label for="editAtivo" class="form-label fw-bold">Status</label>
+                            <select name="ativo" id="editAtivo" class="form-control">
+                                <option value="0">Inativo</option>
+                                <option value="1">Ativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Salvar mudanças</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function() {
+        $('.btn-editar').on('click', function() {
+            // Pegando os dados do botão
+            const id_pessoa = $(this).data('id');
+            const cpf = $(this).data('cpf');
+            const nome_pessoa = $(this).data('nome');
+            const data_nascimento = $(this).data('data_nascimento');
+            const sexo = $(this).data('sexo');
+            const matricula = $(this).data('matricula');
+            const id_lotacao = $(this).data('lotacao');
+            const id_tipo_pessoa = $(this).data('tipo_pessoa');
+            const ativo = $(this).data('ativo');
+
+            
+            
+            $('#editCPF').val(cpf);
+            $('#editNome').val(nome_pessoa);
+            $('#editDataNascimento').val(data_nascimento);
+            $('#editSexo').val(sexo);
+            $('#editMatricula').val(matricula);
+            $('#editLotacao').val(id_lotacao);
+            $('#editTipoPessoa').val(id_tipo_pessoa);
+            $('#editAtivo').val(ativo);
+
+
+            // Ajustando a URL do formulário para o ID correto
+            let url = "{{ route('pessoas.update', ':id') }}";
+            url = url.replace(':id', id_pessoa);
+            $('#formEditarPessoa').attr('action', url);
+        });
+    });
+
+    setTimeout(function() {
+        var alert = document.querySelector('.alert');
+        if (alert) {
+            var bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }
+    }, 5000);
+</script>
 </body>
 </html>
 
