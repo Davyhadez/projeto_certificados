@@ -80,9 +80,9 @@
         }
 
         .detran {
-            max-width: 50%;
+            max-width: 60%;
             height: auto;
-            margin-top: 40px;
+            margin-top: 50px;
         }
     </style>
 </head>
@@ -143,7 +143,7 @@
                         {{-- 2. Se NÃO existir (ou seja, se for a Home), mostre a logo --}}
                      @else
                 <div class="card shadow p-3 mb-5 bg-body rounded border-0 p-5 text-center">
-                    <h2 class="fw-bold">Seja bem-vindo ao sistema de certificados</h2>
+                    <h1 class="fw-bold">Seja bem-vindo ao sistema de certificados</h1>
                     <div>
                         <img src="https://www.motoragora.com.br/wp-content/uploads/2023/01/Detran-PA-1024x576.jpg" alt="logo" class="detran">
                     </div>

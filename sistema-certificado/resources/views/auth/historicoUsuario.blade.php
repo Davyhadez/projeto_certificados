@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <h5>Data de Nascimento: {{ $pessoa->data_nascimento }}</h5>
+                    <h5>Data de Nascimento: {{ $pessoa->data_nascimento ? \Carbon\Carbon::parse($pessoa->data_nascimento)->format('d/m/Y') : 'Não informado' }}</h5>
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <h5>Status: {{ $pessoa->ativo == 1 ? 'Ativo' : 'Inativo' }}</h5>
+                    <h5>Status de Usuário: {{ $u->ativo == 1 ? 'Ativo' : 'Inativo' }}</h5>
                 </div>
             </div>   
         </div>

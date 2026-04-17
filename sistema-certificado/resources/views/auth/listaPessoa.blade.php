@@ -176,7 +176,9 @@
                                             Editar
                                     </button>
                                     
-                                    <form action="{{ route('pessoas.destroy', $p->id_pessoa) }}" method="POST" class="m-0" onsubmit="return confirm('Tem certeza que deseja excluir?')">
+                                    <form action="{{ route('pessoas.destroy', $p->id_pessoa) }}"
+                                          method="POST"
+                                          class="m-0" onsubmit="return confirm('Tem certeza que deseja excluir?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger">
@@ -193,6 +195,8 @@
                 </tbody>
             </table>
         </div>
+
+        {{-- Essa div é para o controle de paginação --}}
         <div class="d-flex justify-content-center mt-5 mb-3 pagination-container">
             {{ $pessoas->links() }}
         </div>
@@ -292,7 +296,6 @@
             $('#editAtivo').val(ativo);
 
 
-            // Ajustando a URL do formulário para o ID correto
             let url = "{{ route('pessoas.update', ':id') }}";
             url = url.replace(':id', id_pessoa);
             $('#formEditarPessoa').attr('action', url);

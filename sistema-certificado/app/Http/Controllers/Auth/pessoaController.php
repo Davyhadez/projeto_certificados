@@ -87,4 +87,12 @@ class PessoaController extends Controller
 
         return redirect()->route('pessoas.index')->with('success', 'Edição atualizada com sucesso!');
     }
+
+    public function destroy($id_pessoa)
+    {
+        $pessoa = Pessoa::findOrFail($id_pessoa);
+        $pessoa->delete();
+
+        return redirect()->route('pessoas.index')->with('success', 'Pessoa excluída com sucesso!');
+    }
 }

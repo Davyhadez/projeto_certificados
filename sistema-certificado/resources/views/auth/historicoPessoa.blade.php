@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <h5>Status: {{ $pessoa->ativo == 1 ? 'Ativo' : 'Inativo' }}</h5>
+                    <h5>Status de Pessoa: {{ $pessoa->ativo == 1 ? 'Ativo' : 'Inativo' }}</h5>
                 </div>
             </div>   
         </div>

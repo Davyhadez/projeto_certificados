@@ -99,4 +99,13 @@ class UsuarioController extends Controller
         
         return redirect()->route('usuarios.index')->with('success', 'Edição atualizada com sucesso!');
     }
+
+
+    public function distroy($id_usuario)
+    {
+        $usuario = Usuario::findOrFail($id_usuario);
+        $usuario->delete();
+
+        return redirect()->route('usuarios.index')->with('success', 'Usuário excluído com sucesso!');
+    }
 }

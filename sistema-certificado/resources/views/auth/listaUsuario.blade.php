@@ -2,6 +2,16 @@
 
 @section('conteudo')
 
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm"
+        role="alert"
+        style="background-color: #d1e7dd; color: #0f5132;">
+            {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <div class="card shadow-sm border-1 p-3">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -93,7 +103,9 @@
                                 Editar
                             </button>
 
-                            <form action="{{ route('pessoas.destroy', $u->pessoa->id_pessoa) }}" method="POST" class="m-0" onsubmit="return confirm('Tem certeza que deseja excluir?')">
+                            <form action="{{ route('usuarios.destroy', $u->id_usuario) }}"
+                                  method="POST"
+                                  class="m-0" onsubmit="return confirm('Tem certeza que deseja excluir?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-outline-danger">
@@ -120,21 +132,36 @@
                 <h5 class="modal-title fw-bold" style="color: teal;">Editar Dados do Usuário</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('usuarios.update', '$u->id_usuario') }}" method="POST" id="formEditarPessoa">
+            <form action="{{ route('usuarios.update', '$u->id_usuario') }}" method="POST" id="formEditarPessoa" autocomplete="off">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="editLogin" class="form-label fw-bold">Login</label>
-                        <input type="text" name="login_usuario" id="editLogin" class="form-control" placeholder="Login do Usuário">
+                        <input type="text" name="login_usuario" id="editLogin" class="form-control focus:border-teal-500 outline-none transition-alll" placeholder="Login do Usuário">
                     </div>
+
                     <div class="mb-3">
-                        <label for="editSenha" class="form-label fw-bold">Senha</label>
-                        <input type="text" name="senha_usuario" id="editSenha" class="form-control" placeholder="Senha do Usuário">
+                        <label for="senha_usuario" class="form-label fw-bold">Senha</label>
+                        <div class="position-relative">
+                            <input type="password"
+                                   name="senha_usuario"
+                                   id="senha_usuario"
+                                   class="form-control"
+                                   style="padding-right: 2.5rem;"
+                                   placeholder="Senha do Usuário">
+
+                            <button type="button"
+                                    onclick="togglePassword()"
+                                    class="btn border-0 position-absolute end-0 top-50 translate-middle-y"
+                                    style="color: teal; background: transparent; z-index: 10;">
+                                    <i class="bi bi-eye-fill" id="icon-senha"></i>
+                            </button>
+                        </div>
                     </div>
                    <div class="row-md-6 mb-3">
                             <label for="editTipoUsuario" class="form-label fw-bold">Tipo de Usuário</label>
-                            <select name="id_tipo_usuario" id="editTipoUsuario" class="form-control">
+                            <select name="id_tipo_usuario" id="editTipoUsuario" class="form-control focus:border-teal-500 outline-none transition-all">
                                 <option value="" disabled selected>selecione o tipo de usuário</option>
                                 <option value="1">Administrador</option>
                                 <option value="2">Treinamento</option>
@@ -143,12 +170,12 @@
                     </div>
                     <div class="row-md-6 mb-3">
                     <label for="ativo" class="form-label fw-bold">Status</label>
-                        <select name="ativo" id="ativo" class="form-control">
+                        <select name="ativo" id="ativo" class="form-control focus:border-teal-500 outline-none transition-all">
                             <option value="" disabled selected>Selecione um tipo</option>
                             <option value="0"{{ old('ativo') == '0' ? 'selected' : '' }}>inativo</option>
                             <option value="1"{{ old('ativo') == '1' ? 'selected' : '' }}>ativo</option>
                         </select>
-                </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
@@ -185,6 +212,7 @@
         });
     });
 
+
     setTimeout(function() {
         var alert = document.querySelector('.alert');
         if (alert) {
@@ -192,6 +220,20 @@
             bsAlert.close();
         }
     }, 5000);
+
+
+    function togglePassword() {
+        const inputSenha = document.getElementById('senha_usuario');
+        const icone = document.getElementById('icon-senha');
+
+        if (inputSenha.type === 'password') {
+                inputSenha.type = 'text';
+                icone.classList.replace('bi-eye-fill', 'bi-eye-slash-fill');
+        } else {
+            inputSenha.type = 'password';
+            icone.classList.replace('bi-eye-slash-fill', 'bi-eye-fill')
+        }
+    }
 </script>
 </body>
 

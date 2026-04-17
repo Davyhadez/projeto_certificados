@@ -42,6 +42,10 @@ Route::get('/usuario/{id}/historico', [UsuarioController::class, 'show'])
     ->name('usuarios.historico');
 
 
+Route::delete('/usuarios/{id_usuario}', [UsuarioController::class, 'distroy'])
+    ->name('usuarios.destroy');
+
+
 // --- ROTAS DE PESSOA ---
 
 
