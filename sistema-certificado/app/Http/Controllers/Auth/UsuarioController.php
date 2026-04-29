@@ -15,9 +15,8 @@ class UsuarioController extends Controller
 
     public function index(Request $request)
     {
-        $busca = $request->input('pesquisarUser');
         $lotacoes = Lotacao::orderBy('nome_lotacao', 'asc')->get();
-
+        $busca = $request->input('pesquisarUser');
         $usuarios = Usuario::with('lotacao')
             ->when($busca, function ($query, $busca) {
                 return $query->where('login_usuario', 'like', "%{$busca}%");
@@ -101,7 +100,7 @@ class UsuarioController extends Controller
     }
 
 
-    public function distroy($id_usuario)
+    public function destroy($id_usuario)
     {
         $usuario = Usuario::findOrFail($id_usuario);
         $usuario->delete();

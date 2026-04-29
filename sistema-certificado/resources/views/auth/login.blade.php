@@ -35,7 +35,7 @@
             <div class="mb-4">
 
                 <label for="login_usuario" class="block text-gray-700 text-sm font-bold mb-2">Login:</label>
-                <input type="text" name="login_usuario" id="login_usuario" class="w-full p-2 border rounded 
+                <input type="password" name="login_usuario" id="login_usuario" class="w-full p-2 border rounded 
                 focus:ring-2 focus:ring-teal-500 outline-none transition-all" placeholder="Digite seu usuário">
 
             </div>

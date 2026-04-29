@@ -32,7 +32,7 @@
     <div class="row justify-content-center"> <div class="col-md-6"> <div class="card shadow-sm border p-4">
 
         <div class="card-header bg-white py-3">
-            <h3 class="fw-bold mb-4 justify-content-center d-flex" style="color: teal !important;">
+            <h3 class="fw-bold mb-4 justify-content-center d-flex" style="color: #000 !important;">
                 <i class="bi bi-person-plus-fill me-2"></i>Cadastro de Usuários
             </h3>
         </div>

@@ -1,3 +1,14 @@
+body.modal-open {
+    padding-right: 0 !important;
+    overflow-y: scroll !important
+}
+
+.modal-open .fixed-top,
+.modal-open .sticky-top,
+.modal-open header {
+    padding-right: 0 !important;
+}
+
 .btn-teal {
     background-color: #008080 !important;
     color: white !important;
@@ -106,3 +117,47 @@
     height: 36px !important;
 }
 
+.btn-visualizar {
+    display: inline-block;
+    background-color: #ffffff;
+    color: black;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: normal;
+    transition: background 0.3s;
+    }
+
+.btn-editar {
+    display: inline-block;
+    background-color: #ffffff;
+    color: black;
+    padding: 8px 12px;
+    border: 1px solid #2e66bf;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+    }
+
+    .btn-outline-info, .btn-editar {
+        color: #000 !important;
+    }
+
+    .btn-editar:hover {
+    color: #e0f2f2 !important;
+    }   
+    
+    .btn-deletar {
+    background-color: #ffffff;
+    color: black;
+    padding: 8px 12px;
+    border: 1px solid #f27f7f;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+    }

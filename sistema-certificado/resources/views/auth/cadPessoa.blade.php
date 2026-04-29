@@ -22,7 +22,7 @@
     <div class="card shadow-sm border-1 p-4">
 
         <div class="card-header bg-white py-3">
-            <h3 class="fw-bold mb-4 justify-content-center d-flex" style="color: teal !important;">
+            <h3 class="fw-bold mb-4 justify-content-center d-flex" style="color: #000 !important;">
                 <i class="bi bi-person-plus-fill me-2"></i>Cadastro de Pessoas
             </h3>
         </div>

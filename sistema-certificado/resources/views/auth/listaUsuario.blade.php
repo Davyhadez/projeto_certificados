@@ -2,7 +2,21 @@
 
 @section('conteudo')
 
-
+<style>
+    .btnEditar {
+        display: inline-block;
+        background-color: #3498db;
+        color: white;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        text-decoration: none;
+        line-height: normal;
+        transition: background 0.3s;
+    }
+</style>
 @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm"
         role="alert"
@@ -17,9 +31,9 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
 
         <h2 class="fw-bold mb-4 justify-content-start d-flex"
-            style="color: teal !important;">
+            style="color: #000 !important;">
             <i class="bi bi-person-fill"></i>
-            Lista de Usuários
+            Painel de Usuários Cadastrados
         </h2>
 
         <form action="{{ route('usuarios.index') }}" method="GET">
@@ -29,7 +43,7 @@
                 <label for="pesquisarUser">
                     <h4 class="pesquisar">
                         <i class="bi bi-search"
-                            style="padding: 10px;"></i>
+                           style="padding: 10px;"></i>
                     </h4>
                 </label>
 
@@ -38,7 +52,7 @@
                     name="pesquisarUser"
                     class="form-control"
                     value="{{ request('pesquisarUser') }}"
-                    style="width: 250px;"
+                    style="width: 250px; margin-bottom: 10px;"
                     placeholder="Pesquisar por Nome">
             </div>
 
@@ -80,18 +94,20 @@
                     <td>{{ $u->pessoa->matricula }}</td>
                     <td>{{ $u->lotacao->nome_lotacao ?? 'Não informada' }}</td>
                     <td>{{ $u->tipo_nome }}</td>
-                    <td>{{ $u->ativo ? 'Ativo' : 'Inativo' }}</td>
-
+                    <td class="text-center">
+                        <span class="badge bg-{{ $u->ativo ? 'success' : 'secondary' }}">
+                            {{ $u->ativo ? 'Ativo' : 'Inativo' }}
+                        </span>
                     <td class="text-center">
 
                         <div class="d-flex justify-content-center gap-2">
 
-                            <a href="{{ route('usuarios.historico', $u->id_usuario) }}" class="btn btn-outline-secondary">
+                            <a href="{{ route('usuarios.historico', $u->id_usuario) }}" class="btn btn-outline-secondary btn-visualizar">
                                 <i class="bi bi-eye"></i>
-                                Histórico
+                                Visualizar
                             </a>
                             <button type="button"
-                                class="btn btn-outline-info btn-editar"
+                                class="btn btn-primary btn-editar"
                                 data-bs-toggle="modal"
                                 data-bs-target="#modalEditar"
                                 data-id="{{ $u->id_usuario }}"
@@ -108,7 +124,7 @@
                                   class="m-0" onsubmit="return confirm('Tem certeza que deseja excluir?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger">
+                                <button type="submit" class="btn btn-outline-danger btn-deletar">
                                     Deletar
                                 </button>
                             </form>

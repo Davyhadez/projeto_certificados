@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PessoaController;
 use App\Http\Controllers\Auth\UsuarioController;
+use App\Http\Controllers\Auth\EventoController;
 use Illuminate\Support\Facades\Route;
 
 // Redirecionamento Inicial
@@ -75,6 +76,14 @@ Route::get('/pessoa/{id}/historico', [PessoaController::class, 'show'])
     ->middleware('auth')
     ->name('pessoas.historico');
 
+
+// --- ROTAS DE EVENTOS ---
+Route::get('/eventos', [EventoController::class, 'index'])
+    ->middleware('auth')
+    ->name('eventos.index');
+
+Route::put('/eventos/{id}', [EventoController::class, 'update'])
+    ->name('eventos.update');
 
 // --- AUTENTICAÇÃO ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

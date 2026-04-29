@@ -10,8 +10,8 @@
     @endsection
 
         <div class="card-header bg-white py-3">
-            <h3 class="fw-bold mb-4 justify-content-center d-flex" style="color: teal !important;">
-                <i class="bi bi-person-lines-fill me-2"></i>Histórico de {{ $pessoa->nome_pessoa }}
+            <h3 class="fw-bold mb-4 justify-content-center d-flex" style="color: #000 !important;">
+                <i class="bi bi-person-lines-fill me-2"></i>{{ $pessoa->nome_pessoa }}
             </h3>
                <div class="row justify-content-center"> <div class="col-md-8"> <div class="card shadow-sm border p-4">
 
@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <h5>Sexo: {{ $pessoa->sexo }}</h5>
+                    <h5>Sexo: {{ $pessoa->sexo == 'M' ? 'Masculino' : 'Feminino'}}</h5>
                 </div>
 
                 <div class="col-md-6 mb-3">

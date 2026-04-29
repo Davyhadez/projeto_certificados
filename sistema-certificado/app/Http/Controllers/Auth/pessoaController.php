@@ -6,12 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Historico;
 use App\Models\Lotacao;
 use App\Models\Pessoa;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
+
 
 class PessoaController extends Controller
 {
-
-    //ESSENCIAL PARA O FUNCIONAMENTO DO SELECT DE LOTAÇÕES.
+    // ESSENCIAL PARA O FUNCIONAMENTO DO SELECT DE LOTAÇÕES.
     public function create()
     {
         $lotacoes = Lotacao::all();
@@ -20,26 +24,23 @@ class PessoaController extends Controller
 
     public function index(Request $request)
     {
-        $lotacoes = Lotacao::orderBy('nome_lotacao', 'asc') -> get();
+        $lotacoes = Lotacao::orderBy('nome_lotacao', 'asc')->get();
         $busca = $request->input('pesquisarUser');
         $pessoas = Pessoa::with('lotacao')
-        ->when($busca, function ($query, $busca) {
-            return $query->where('nome_pessoa', 'like', "%{$busca}%");
-        })
-        ->orderBy('nome_pessoa')
-        ->paginate(20);
+            ->when($busca, function ($query, $busca) {
+                return $query->where('nome_pessoa', 'like', "%{$busca}%");
+            })
+            ->orderBy('nome_pessoa')
+            ->paginate(20);
 
-    return view('auth.listaPessoa', compact('pessoas', 'lotacoes'));
+        return view('auth.listaPessoa', compact('pessoas', 'lotacoes'));
     }
 
     public function show($id)
-{
-    // Busca a pessoa ou retorna erro 404 se não existir
-    $pessoa = Pessoa::with('lotacao')->findOrFail($id);
-
-    // Retorna a sua nova view enviando os dados da pessoa
-    return view('auth.historicoPessoa', compact('pessoa'));
-}
+    {
+        $pessoa = Pessoa::with('lotacao')->findOrFail($id);
+        return view('auth.historicoPessoa', compact('pessoa'));
+    }
 
     public function store(Request $request)
     {
@@ -80,19 +81,31 @@ class PessoaController extends Controller
             'ativo'           => 'required'
         ]);
 
-
         $pessoa = Pessoa::findOrFail($id_pessoa);
         $pessoa->update($request->all());
-        $resultado = $pessoa->update($request->all());
 
         return redirect()->route('pessoas.index')->with('success', 'Edição atualizada com sucesso!');
     }
 
-    public function destroy($id_pessoa)
+    public function destroy(Request $request, $id_pessoa)
     {
-        $pessoa = Pessoa::findOrFail($id_pessoa);
-        $pessoa->delete();
+        $request->validate([
+            'password_confirm' => 'required'
+        ]);
 
-        return redirect()->route('pessoas.index')->with('success', 'Pessoa excluída com sucesso!');
+        if (md5($request->password_confirm) !== Auth::user()->senha_usuario) {
+            return back()->withErrors(['password_confirm' => 'Senha incorreta.'])->withInput();
+        }
+
+
+        try {
+            $pessoa = Pessoa::findOrFail($id_pessoa);
+            \App\Models\User::where('id_pessoa', $id_pessoa)->delete();
+            $pessoa->delete();
+
+            return redirect()->route('pessoas.index')->with('success', 'Registro removido com sucesso!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Não foi possível excluir: ' . $e->getMessage());
+        }
     }
 }

@@ -4,45 +4,6 @@
 <title>lista de pessoas</title>
 <body>
     <style>
-        .btnhistorico {
-        display: inline-block;
-        background-color: #5fce64;
-        color: white;
-        padding: 8px 12px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        text-decoration: none;
-        line-height: normal;
-        transition: background 0.3s;
-        }
-
-        .btnEditar {
-        display: inline-block;
-        background-color: #3498db;
-        color: white;
-        padding: 8px 12px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        text-decoration: none;
-        line-height: normal;
-        transition: background 0.3s;
-        }
-
-        .btn-deletar {
-        background-color: #e74c3c;
-        color: white;
-        padding: 8px 12px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background 0.3s;
-        }
-
         td:last-child {
             white-space: nowrap;
             width: 1%;
@@ -93,9 +54,9 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
 
-            <h2 class="fw-bold mb-4 justify-content-start d-flex" style="color: teal !important;">
+            <h2 class="fw-bold mb-4 justify-content-start d-flex" style="color: #000 !important;">
                 <i class="bi bi-person-fill"></i>
-                Lista de Pessoas
+                Painel de Pessoas Cadastradas
             </h2>
             
             <form action="{{ route('pessoas.index') }}" method="GET">
@@ -104,7 +65,8 @@
 
                     <label for="pesquisarUser">
                         <h4 class="pesquisar">
-                            <i class="bi bi-search" style="padding: 10px;"></i>
+                            <i class="bi bi-search"
+                               style="padding: 10px;"></i>
                         </h4>
                     </label>
 
@@ -113,7 +75,7 @@
                         name="pesquisarUser" 
                         class="form-control" 
                         value="{{ request('pesquisarUser') }}" 
-                        style="width: 250px;" 
+                        style="width: 250px; margin-bottom: 10px;" 
                         placeholder="Pesquisar por Nome">
                 </div>
 
@@ -127,7 +89,7 @@
                     Cadastrar Pessoa
                 </a>
             </div>
-            
+             
         </div>
 
         <div class="table-responsive">
@@ -139,6 +101,7 @@
                         <th scope="col">Matrícula</th>
                         <th scope="col">Lotação</th>
                         <th scope="col">Data de Nascimento</th>
+                        <th scope="col">Status</th>
                         <th scope="col" class="text-center col-acoes">Ações</th>
                     </tr>
                 </thead>
@@ -150,17 +113,21 @@
                             <td>{{ $p->matricula }}</td>
                             <td>{{ $p->lotacao -> nome_lotacao ?? 'Não informada' }}</td>
                             <td>{{ \Carbon\Carbon::parse($p->data_nascimento)->format('d/m/Y') }}</td>
-                            
+                            <td class="text-center">
+                                <span class="badge bg-{{ $p->ativo ? 'success' : 'secondary' }}">
+                                    {{ $p->ativo ? 'Ativo' : 'Inativo' }}
+                                </span>
+                            </td>
                             <td class="text-center">
 
                                 <div class="d-flex justify-content-center gap-2">
 
-                                    <a href="{{ route('pessoas.historico', $p ->id_pessoa) }}" class="btn btn-outline-secondary">
+                                    <a href="{{ route('pessoas.historico', $p ->id_pessoa) }}" class="btn btn-outline-secondary btn-visualizar">
                                         <i class="bi bi-eye"></i>
-                                            Histórico
+                                            Visualizar
                                     </a>
                                     <button type="button"
-                                        class="btn btn-outline-info btn-editar"
+                                        class="btn btn-primary btn-editar"
                                         data-bs-toggle="modal"
                                         data-bs-target="#modalEditar"
                                         data-id="{{ $p -> id_pessoa }}"
@@ -175,23 +142,49 @@
                                         <i class="bi bi-pencil-square"></i>
                                             Editar
                                     </button>
-                                    
-                                    <form action="{{ route('pessoas.destroy', $p->id_pessoa) }}"
-                                          method="POST"
-                                          class="m-0" onsubmit="return confirm('Tem certeza que deseja excluir?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger">
-                                            <i class="bi bi-trash"></i>
-                                            Deletar
-                                        </button>
-                                    </form>
-
+                                
+                                    <button type="button"
+                                        class="btn btn-outline-danger btn-deletar"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmDeleteModal"
+                                        data-id="{{ $p -> id_pessoa }}"
+                                        data-nome="{{ $p -> nome_pessoa }}">
+                                        <i class="bi bi-trash"></i>
+                                        Deletar
+                                    </button>
                                 </div>
-
                             </td>
                         </tr>
                     @endforeach
+
+                    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+                                <form action="" method="POST" id="formDeletarPessoa">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="modal-body">
+                                        <p>Tem certeza que deseja excluir o (a): <br><strong id="nomePessoaExcluir"></strong><br>Esta ação não poderá ser desfeita.</p>
+
+                                            <div class="mb-3">
+                                                <label for="password" class="form-label fw-bold">Digite a sua senha para confirmar:</label>
+                                                <input type="password" name="password_confirm" id="password" class="form-control" placeholder="Digite sua senha" required>
+                                            </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </tbody>
             </table>
         </div>
@@ -272,8 +265,8 @@
     </div>
     <script>
     $(document).ready(function() {
+        // Função para carregar dados no Modal de Edição
         $('.btn-editar').on('click', function() {
-            // Pegando os dados do botão
             const id_pessoa = $(this).data('id');
             const cpf = $(this).data('cpf');
             const nome_pessoa = $(this).data('nome');
@@ -284,8 +277,6 @@
             const id_tipo_pessoa = $(this).data('tipo_pessoa');
             const ativo = $(this).data('ativo');
 
-            
-            
             $('#editCPF').val(cpf);
             $('#editNome').val(nome_pessoa);
             $('#editDataNascimento').val(data_nascimento);
@@ -295,20 +286,34 @@
             $('#editTipoPessoa').val(id_tipo_pessoa);
             $('#editAtivo').val(ativo);
 
-
             let url = "{{ route('pessoas.update', ':id') }}";
             url = url.replace(':id', id_pessoa);
             $('#formEditarPessoa').attr('action', url);
         });
-    });
 
-    setTimeout(function() {
-        var alert = document.querySelector('.alert');
-        if (alert) {
-            var bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        }
-    }, 5000);
+        // Função para carregar dados no Modal de Deleção (A que estava falhando)
+        $('.btn-deletar-modal').on('click', function() {
+            const id_pessoa = $(this).data('id');
+            const nome_pessoa = $(this).data('nome');
+
+            $('#nomePessoaExcluir').text(nome_pessoa);
+            
+            // Usamos :id_pessoa para casar com a sua rota do web.php
+            let url = "{{ route('pessoas.destroy', ':id_pessoa') }}";
+            url = url.replace(':id_pessoa', id_pessoa);
+
+            $('#formDeletarPessoa').attr('action', url);
+        });
+
+        // Auto-fechar alertas após 5 segundos
+        setTimeout(function() {
+            var alertElement = document.querySelector('.alert');
+            if (alertElement) {
+                var bsAlert = new bootstrap.Alert(alertElement);
+                bsAlert.close();
+            }
+        }, 5000);
+    });
 </script>
 </body>
 </html>
