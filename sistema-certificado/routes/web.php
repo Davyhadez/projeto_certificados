@@ -85,6 +85,14 @@ Route::get('/eventos', [EventoController::class, 'index'])
 Route::put('/eventos/{id}', [EventoController::class, 'update'])
     ->name('eventos.update');
 
+Route::get('/eventos/{id}', [EventoController::class, 'show'])
+    ->middleware('auth')
+    ->name('eventos.show');
+
+Route::post('/eventos', [EventoController::class, 'store'])
+    ->name('eventos.store');
+
+
 // --- AUTENTICAÇÃO ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

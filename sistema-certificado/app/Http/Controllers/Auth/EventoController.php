@@ -37,4 +37,30 @@ class EventoController extends Controller
 
         return redirect()->route('eventos.index')->with('success', 'Evento atualizado com sucesso!');
     }
+
+
+
+
+    public function show($id)
+    {
+        $evento = Evento::with('disciplinas')->withCount('disciplinas')->findOrFail($id);
+        return view('auth.detalhes-evento', compact('evento'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nome_evento'     => 'required|string|max:255',
+            'id_tipo_evento'  => 'required|exists:tipo_evento,id_tipo_evento',
+            'carga_horaria'   => 'required|integer|min:1',
+        ]);
+
+        Evento::create([
+
+            'nome_evento'     => $request->input('nome_evento'),
+            'id_tipo_evento'  => $request->input('id_tipo_evento'),
+            'carga_horaria'   => $request->input('carga_horaria'),
+        ]);
+        return redirect()->route('eventos.index')->with('success', "Evento cadastrado com sucesso!");
+    }
 }
