@@ -27,7 +27,7 @@
 <body class="bg-gray-200 flex items-center justify-center h-screen">
 
     <div class="bg-white p-8 rounded-xl shadow-2xl w-96 border-t-4 border-teal-800">
-        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Acesso ao Sistema de Certificados</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Acesso ao Sistema de Certificados</h2>
 
         <form action="{{ route('login') }}" method="POST">
 

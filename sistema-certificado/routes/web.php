@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PessoaController;
 use App\Http\Controllers\Auth\UsuarioController;
 use App\Http\Controllers\Auth\EventoController;
+use App\Http\Controllers\Auth\DisciplinaController;
 use Illuminate\Support\Facades\Route;
 
 // Redirecionamento Inicial
@@ -92,6 +93,11 @@ Route::get('/eventos/{id}', [EventoController::class, 'show'])
 Route::post('/eventos', [EventoController::class, 'store'])
     ->name('eventos.store');
 
+Route::post('/eventos/{id}/disciplinas', [DisciplinaController::class, 'store'])
+    ->name('disciplinas.store');
+
+Route::delete('/disciplinas/{id}', [DisciplinaController::class, 'destroy'])
+    ->name('disciplinas.destroy');
 
 // --- AUTENTICAÇÃO ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

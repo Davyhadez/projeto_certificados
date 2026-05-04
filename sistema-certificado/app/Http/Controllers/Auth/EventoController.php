@@ -19,7 +19,6 @@ class EventoController extends Controller
 
 
 
-    //AREA DE ATUALIZAÇÃO DE EVENTOS
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -44,7 +43,10 @@ class EventoController extends Controller
     public function show($id)
     {
         $evento = Evento::with('disciplinas')->withCount('disciplinas')->findOrFail($id);
-        return view('auth.detalhes-evento', compact('evento'));
+
+        $cargaTotal = $evento->disciplinas->sum('carga_horaria');
+
+        return view('AUTH.detalhes-evento', compact('evento', 'cargaTotal'));
     }
 
     public function store(Request $request)
