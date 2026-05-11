@@ -33,4 +33,20 @@ class DisciplinaController extends Controller
 
         return redirect()->back()->with('success', 'Disciplina removida com sucesso!');
     }
+
+
+    public function update(Request $request, $id_disciplina)
+    {
+        $request->validate([
+            'nome_disciplina' => 'required|string|max:255',
+            'carga_horaria'   => 'required|numeric',
+            'conteudo'        => 'nullable|string',
+            'id_evento'       => 'required|exists:evento,id_evento'
+        ]);
+
+        $disciplina = Disciplina::findOrFail($id_disciplina);
+        $disciplina->update($request->all());
+
+        return redirect()->back()->with('success', 'Edição atualizada com sucesso!');
+    }
 }

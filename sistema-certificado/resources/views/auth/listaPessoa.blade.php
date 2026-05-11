@@ -9,15 +9,6 @@
             width: 1%;
         }
 
-        .btnEditar, .btnhistorico, .bntDeletar {
-            display: inline-block;
-            align-items: center;
-            justify-content: center;
-            height: 38px;
-            margin: 0;
-        }
-
-
         .table-responsive .table th, 
         .table-responsive .table td {
             white-space: nowrap;

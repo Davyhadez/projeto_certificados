@@ -2,42 +2,6 @@
 
 @section('conteudo') {{-- O nome do seu @yield lá na dashboard deve ser 'conteudo' --}}
 
-<style>
-    .btn-teal {
-        background-color: teal !important; 
-        color: white !important; 
-        padding: 9px 18px; 
-        border-radius: 5px; 
-        font-weight: bold;
-        transition: all 0.3s ease;
-        border: none;
-    }
-    .btn-teal:hover {
-        background-color: #004d40 !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    .table thead th {
-        background-color: #f8f9fa;
-        color: #333;
-        font-weight: 700;
-    }
-
-    .col-acoes {
-        width: 120px;
-    }
-
-    .input-search { 
-        width: 250px;
-        margin-bottom: 10px;
-    }
-    
-    .badge-evento { 
-        font-size: 0.85rem;
-        padding: 0.5em 1em; 
-    }
-</style>
-
 <div class="card shadow-sm border-1 p-3">
     <div class="card shadow-sm border-0 p-1">
         
@@ -93,32 +57,58 @@
                     @forelse($eventos as $evento)
                     <tr>
                         <td class="none">{{ $evento->nome_evento }}</td>
-                        <td class="text-center">{{ $evento->carga_horaria }} HORAS/AULA</td>
                         <td class="text-center">
-                            @if($evento->id_tipo_evento == 2)
-                                <span class="badge bg-secondary badge-evento">
-                                    <i class="bi bi-dash-circle me-1"></i>Sem disciplinas
-                                </span>
+                            @if($evento->id_tipo_evento == 1) 
+                                {{-- Soma dinâmica para CURSOS --}}
+                                <strong>{{ $evento->disciplinas->sum('carga_horaria') }}</strong> HORAS/AULA
                             @else
-                                <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn btn-sm btn-outline-primary fw-bold">
-                                    <i class="bi bi-eye-fill"></i>
-                                    Ver Disciplinas
-                                </a>
+                                {{-- Valor fixo para PALESTRAS --}}
+                                {{ $evento->carga_horaria }} HORAS/AULA
                             @endif
                         </td>
+                        {{-- Localize esta TD na sua tabela de listagem --}}
                         <td class="text-center">
-                            <span class="badge bg-light text-dark border">{{ $evento->tipo->id_tipo_evento == 1 ? 'CURSO' : ($evento->tipo->id_tipo_evento == 2 ? 'PALESTRA' : 'OUTRO') }}</span>
+                        @if($evento->id_tipo_evento == 2)
+                            {{-- Se for Palestra, não tem disciplinas --}}
+                            <span class="badge bg-secondary badge-evento">
+                                <i class="bi bi-dash-circle me-1"></i>Sem disciplinas
+                            </span>
+                        @else
+                            {{-- PARA CURSOS: O botão de "Ver Disciplinas" --}}
+                            <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn btn-sm btn-outline-secondary fw-bold btn-visualizar">
+                                <i class="bi bi-eye-fill"></i>
+                                Ver Disciplinas
+                            </a>
+                        @endif
+                    </td>
+                        <td class="text-center">
+                            <span class="badge bg-light text-dark border">
+                                {{ $evento->tipo->descricao_tipo_evento }}
+                            </span>
                         </td>
-                        <td class="text-center">
+                        <td class="d-flex justify-content-center gap-2">
                             <button type="button" class="btn btn-primary btn-editar"
                                         data-bs-toggle="modal"
                                         data-bs-target="#modalEditarEvento"
                                         data-id="{{ $evento->id_evento }}"
                                         data-nome="{{ $evento->nome_evento }}"
-                                        data-tipo="{{ $evento->id_tipo_evento }}">
+                                        data-tipo="{{ $evento->id_tipo_evento }}"
+                                        data-carga="{{ $evento->carga_horaria }}">
+
                                 <i class="bi bi-pencil-square"></i>
                                 Editar
                             </button>
+                        
+
+                            <form action="{{ route('eventos.destroy', $evento->id_evento) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este evento?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="btn btn-sm btn-outline-danger btn-deletar" >
+                                    <i class="bi bi-trash"></i>
+                                    <span>Deletar</span>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     @empty
@@ -142,7 +132,13 @@
 </div>
 
 
-<div class="modal fade" id="modalEditarEvento" tabindex="-1" aria-labelledby="modalEditarEventoLabel" aria-hidden="true">
+
+{{-- MODAL DE EDITAR --}}
+<div class="modal fade"
+     id="modalEditarEvento"
+     tabindex="-1"
+     aria-labelledby="modalEditarEventoLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-light">
@@ -154,7 +150,7 @@
             
             <form action="" method="POST" id="formEditarEvento">
                 @csrf
-                @method('PUT') {{-- Essencial para o Laravel entender que é uma edição --}}
+                @method('PUT')
                 
                 <div class="modal-body">
                     <div class="mb-3">
@@ -172,22 +168,28 @@
                         </select>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3" id="edit_container_carga_horaria">
                         <label for="edit_carga_horaria" class="form-label fw-bold">Carga Horária (Horas/Aula)</label>
                         <input type="number" name="carga_horaria" id="edit_carga_horaria" class="form-control" min="1">
                     </div>
                 </div>
                 
                 <div class="modal-footer bg-light border-0">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-teal px-4" style="background-color: teal; color: white;">Atualizar Evento</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-teal">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="modalCadastrarEvento" tabindex="-1" aria-labelledby="modalCadastrarEventoLabel" aria-hidden="true">
+
+
+{{-- MODAL DE CADASTRAR --}}
+<div class="modal fade" id="modalCadastrarEvento"
+     tabindex="-1"
+     aria-labelledby="modalCadastrarEventoLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-light">
@@ -196,6 +198,8 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
+
             <form action="{{ route('eventos.store') }}" method="POST" autocomplete="off">
                 @csrf
                 <div class="modal-body">
@@ -203,66 +207,94 @@
                         <label class="form-label fw-bold">Nome do Evento</label>
                         <input type="text" name="nome_evento" class="form-control" placeholder="Ex: Curso de Formação">
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label fw-bold">Tipo do Evento</label>
-                        <select name="id_tipo_evento" class="form-select">
+                        <select name="id_tipo_evento" id="id_tipo_evento" class="form-select">
                             <option value="" disabled selected>Selecione o tipo</option>
                             @foreach($tipos as $tipo)
                                 <option value="{{ $tipo->id_tipo_evento }}">{{ $tipo->descricao_tipo_evento }}</option>
                             @endforeach
                         </select>
                     </div>
-
-                    <div class="mb-3">
+                    <div class="mb-3" id="container_carga_horaria">
                         <label class="form-label fw-bold">Carga Horária (Horas/Aula)</label>
-                        <input type="number" name="carga_horaria" class="form-control" placeholder="Ex: 40" min="1">
+                        <input type="number" id="carga_horaria" name="carga_horaria" class="form-control" placeholder="Ex: 40" min="1">
                     </div>
                 </div>
                 <div class="modal-footer bg-light border-0">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-teal px-4" style="background-color: teal; color: white;">Salvar Evento</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-teal"">Salvar</button>
                 </div>
             </form>
+
+
         </div>
     </div>
 </div>
 
-<!-- Modal Editar (Mantenha o seu, mas garanta que o ID seja este) -->
-<div class="modal fade" id="modalEditarEvento" tabindex="-1" aria-hidden="true">
-    <!-- ... (conteúdo do seu modal de editar que já fizemos antes) ... -->
-</div>
-
 <script>
-    const modalEditar = document.getElementById('modalEditarEvento');
-    modalEditar.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
+    // Função principal para esconder/exibir a carga horária
+    function gerenciarCarga(selectEl, containerEl, inputEl) {
+        if (!selectEl || !containerEl) return;
         
-        // Pega os dados dos atributos data- que colocamos no botão
-        const id = button.getAttribute('data-id');
-        const nome = button.getAttribute('data-nome');
-        const tipo = button.getAttribute('data-tipo');
-
-        // Preenche os inputs do modal
-        modalEditar.querySelector('#edit_nome_evento').value = nome;
-        modalEditar.querySelector('#edit_id_tipo_evento').value = tipo;
-        
-        // Define a URL de destino do formulário
-        // Usamos a rota nomeada ou o caminho absoluto para evitar o 404
-        const form = modalEditar.querySelector('#formEditarEvento');
-        form.action = '/eventos/' + id; 
-    });
-
-
+        const texto = selectEl.options[selectEl.selectedIndex].text.toUpperCase();
+        if (texto.includes('CURSO')) {
+            containerEl.style.display = 'none';
+            inputEl.value = ''; // Limpa o valor se for curso
+            inputEl.removeAttribute('required');
+        } else {
+            containerEl.style.display = 'block';
+            inputEl.setAttribute('required', 'required');
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', function () {
-        const btnNovoEvento = document.querySelector('[data-bs-target="#modalCadastrarEvento"]');
-        const meuModal = new bootstrap.Modal(document.getElementById('modalCadastrarEvento'));
+        // --- LÓGICA DO MODAL CADASTRAR ---
+        const selectCad = document.getElementById('id_tipo_evento');
+        const containerCad = document.getElementById('container_carga_horaria');
+        const inputCad = document.getElementById('carga_horaria');
 
-        if (btnNovoEvento) {
-            btnNovoEvento.addEventListener('click', function () {
-                meuModal.show();
-            });
+        if (selectCad) {
+            selectCad.addEventListener('change', () => gerenciarCarga(selectCad, containerCad, inputCad));
+        }
+
+        // --- LÓGICA DO MODAL EDITAR ---
+        const modalEditar = document.getElementById('modalEditarEvento');
+        const selectEdit = document.getElementById('edit_id_tipo_evento');
+        const containerEdit = document.getElementById('edit_container_carga_horaria');
+        const inputEdit = document.getElementById('edit_carga_horaria');
+
+        // Quando o modal de editar abrir
+        modalEditar.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            
+            // 1. Captura os dados do botão (Faltava capturar a carga aqui!)
+            const id = button.getAttribute('data-id');
+            const nome = button.getAttribute('data-nome');
+            const tipo = button.getAttribute('data-tipo');
+            const carga = button.getAttribute('data-carga'); // <--- CAPTURA O VALOR
+
+            // 2. Preenche os campos básicos
+            modalEditar.querySelector('#edit_nome_evento').value = nome;
+            selectEdit.value = tipo;
+            
+            // 3. Define a rota de update
+            modalEditar.querySelector('#formEditarEvento').action = '/eventos/' + id;
+
+            // 4. PRIMEIRO executa a lógica de esconder/exibir
+            gerenciarCarga(selectEdit, containerEdit, inputEdit);
+
+            // 5. POR ÚLTIMO, se for palestra, insere o valor da carga
+            // Fazemos isso por último para garantir que a função gerenciarCarga não limpe o valor
+            const texto = selectEdit.options[selectEdit.selectedIndex].text.toUpperCase();
+            if (!texto.includes('CURSO')) {
+                inputEdit.value = carga; 
+            }
+        });
+
+        // Quando mudar o tipo dentro do modal de editar
+        if (selectEdit) {
+            selectEdit.addEventListener('change', () => gerenciarCarga(selectEdit, containerEdit, inputEdit));
         }
     });
 </script>

@@ -49,15 +49,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($evento->disciplinas as $disciplina)
+                                @forelse($evento->disciplinas as $disciplina)
                                 <tr>
                                     <td>{{ $disciplina->nome_disciplina }}</td>
                                     <td class="text-center">{{ $disciplina->carga_horaria }}h</td>
                                     
                                     <td class="text-center">
                                         @if($disciplina->conteudo)
-                                            {{-- Botão para abrir o Modal de Conteúdo --}}
-                                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalConteudo{{ $disciplina->id_disciplina }}">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-visualizar" data-bs-toggle="modal" data-bs-target="#modalConteudo{{ $disciplina->id_disciplina }}">
                                                 <i class="bi bi-file-text"></i> Ver Conteúdo
                                             </button>
                                         @else
@@ -66,18 +65,29 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <div class="btn-group">
-                                            {{-- Botão Editar (Abre modal ou redireciona) --}}
-                                            <button class="btn btn-sm btn-outline-primary" title="Editar">
-                                                <i class="bi bi-pencil"></i>
+                                        <div class="d-flex justify-content-center gap-2" role="group">
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-primary btn-editar"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEditarPrincipal"
+                                                data-id="{{ $disciplina -> id_disciplina }}"
+                                                data-nome="{{ $disciplina -> nome_disciplina }}"
+                                                data-carga_horaria="{{ $disciplina -> carga_horaria }}"
+                                                data-conteudo="{{ $disciplina -> conteudo }}"
+                                                data-id_evento="{{ $disciplina -> id_evento }}">
+                                                <i class="bi bi-pencil-square"></i>
+                                                <span>Editar</span>
                                             </button>
 
-                                            {{-- Botão Excluir com confirmação simples --}}
-                                            <form action="{{ route('disciplinas.destroy', $disciplina->id_disciplina) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta disciplina?')">
+                                            <form action="{{ route('disciplinas.destroy', $disciplina->id_disciplina) }}"
+                                                method="POST" 
+                                                onsubmit="return confirm('Tem certeza que deseja excluir esta disciplina?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-2 btn-deletar" >
                                                     <i class="bi bi-trash"></i>
+                                                    <span>Deletar</span>
                                                 </button>
                                             </form>
                                         </div>
@@ -98,7 +108,18 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endforeach
+                                @empty
+                                {{-- CAIXA DE LISTA VAZIA --}}
+                                <tr>
+                                    <td colspan="4" class="text-center py-5">
+                                        <div class="text-muted">
+                                            <i class="bi bi-archive fs-1 d-block mb-2"></i>
+                                            <p class="mb-0 fw-bold">Nenhuma disciplina cadastrada.</p>
+                                            <small>As disciplinas adicionadas aparecerão aqui.</small>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforelse
                             </tbody>   
                         </table>
                     </div>
@@ -135,11 +156,73 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modalEditarPrincipal" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarLabel">Editar Disciplina</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+            <form action="" method="POST" id="formEditarDisciplina">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <input type="hidden" name="id_evento" id="edit_id_evento">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nome da Disciplina</label>
+                        <input type="text" name="nome_disciplina" id="edit_nome_disciplina" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Carga Horária</label>
+                        <input type="number" name="carga_horaria" id="edit_carga_horaria" class="form-control" required>
+                    </div>
 
-<style>
-    .text-teal { color: teal !important; }
-    .btn-teal { background-color: teal !important; color: white; border: none; }
-    .btn-teal:hover { background-color: #006666 !important; color: white; transform: translateY(-1px); }
-    .form-control:focus { background-color: #fff !important; box-shadow: 0 0 0 0.25rem rgba(0, 128, 128, 0.1); border: 1px solid teal !important; }
-</style>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Conteúdo Programático</label>
+                        <textarea name="conteudo" id="edit_conteudo" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-teal" style="background-color: teal; color: white;">Atualizar Evento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalEditar = document.getElementById('modalEditarPrincipal');
+        
+        if (modalEditar) {
+            modalEditar.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+
+                const id = button.getAttribute('data-id');
+                const nome = button.getAttribute('data-nome');
+                const carga = button.getAttribute('data-carga_horaria');
+                const conteudo = button.getAttribute('data-conteudo');
+                const id_evento = button.getAttribute('data-id_evento');
+
+                const form = modalEditar.querySelector('form');
+                form.action = `/disciplinas/${id}`;
+
+                modalEditar.querySelector('#edit_nome_disciplina').value = nome;
+                modalEditar.querySelector('#edit_carga_horaria').value = carga;
+                modalEditar.querySelector('#edit_conteudo').value = conteudo;
+                modalEditar.querySelector('#edit_id_evento').value = id_evento;
+
+                console.log('Form action definido para: ' + form.action);
+
+            });
+        }
+    });
+</script>
 @endsection

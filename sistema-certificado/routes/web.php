@@ -93,8 +93,18 @@ Route::get('/eventos/{id}', [EventoController::class, 'show'])
 Route::post('/eventos', [EventoController::class, 'store'])
     ->name('eventos.store');
 
+Route::delete('/eventos/{id}', [EventoController::class, 'destroy'])
+    ->name('eventos.destroy');
+
+Route::get('/detalhesEventos', [EventoController::class, 'index'])
+    ->middleware('auth')
+    ->name('disciplinas.index');
+
 Route::post('/eventos/{id}/disciplinas', [DisciplinaController::class, 'store'])
     ->name('disciplinas.store');
+
+Route::put('/disciplinas/{id_disciplina}', [DisciplinaController::class, 'update'])
+    ->name('disciplinas.update');
 
 Route::delete('/disciplinas/{id}', [DisciplinaController::class, 'destroy'])
     ->name('disciplinas.destroy');

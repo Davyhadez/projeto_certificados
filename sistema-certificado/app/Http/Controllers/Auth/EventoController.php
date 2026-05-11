@@ -38,6 +38,16 @@ class EventoController extends Controller
     }
 
 
+    public function destroy($id)
+    {
+        $evento = Evento::findOrFail($id);
+        
+        $evento->disciplinas()->delete();
+
+        $evento->delete();
+
+        return redirect()->back()->with('success', 'Evento removido com sucesso!');
+    }
 
 
     public function show($id)
@@ -54,15 +64,17 @@ class EventoController extends Controller
         $request->validate([
             'nome_evento'     => 'required|string|max:255',
             'id_tipo_evento'  => 'required|exists:tipo_evento,id_tipo_evento',
-            'carga_horaria'   => 'required|integer|min:1',
+            'carga_horaria'   => 'nullable|numeric',
         ]);
 
-        Evento::create([
+        $dados = $request->all();
 
-            'nome_evento'     => $request->input('nome_evento'),
-            'id_tipo_evento'  => $request->input('id_tipo_evento'),
-            'carga_horaria'   => $request->input('carga_horaria'),
-        ]);
+        if ($request->id_tipo_evento == 1) {
+            $dados['carga_horaria'] = 0;
+        }
+
+        Evento::create($dados);
+
         return redirect()->route('eventos.index')->with('success', "Evento cadastrado com sucesso!");
     }
 }
