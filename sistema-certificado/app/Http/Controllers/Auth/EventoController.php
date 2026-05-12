@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -13,7 +14,7 @@ class EventoController extends Controller
     {
         $eventos = Evento::with(['tipo'])->withCount('disciplinas')->paginate(10);
         $tipos = TipoEvento::all();
-            
+
         return view('auth.eventos', compact('eventos', 'tipos'));
     }
 
@@ -21,18 +22,32 @@ class EventoController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $rules = [
             'nome_evento' => 'required|string|max:255',
             'id_tipo_evento' => 'required|integer',
-        ]);
+        ];
+
+        
+        if ($request->id_tipo_evento == 1) { 
+            $rules['carga_horaria'] = 'nullable|numeric';
+        } else { 
+            $rules['carga_horaria'] = 'required|numeric|min:1';
+        }
+
+        $request->validate($rules);
 
         $evento = Evento::findOrFail($id);
 
+        $evento->nome_evento = $request->nome_evento;
+        $evento->id_tipo_evento = $request->id_tipo_evento;
 
-        $evento->update([
-            'nome_evento' => $request->nome_evento,
-            'id_tipo_evento' => $request->id_tipo_evento,
-        ]);
+        if ($request->id_tipo_evento == 1) { 
+            $evento->carga_horaria = 0;
+        } else { 
+            $evento->carga_horaria = $request->carga_horaria;
+        }
+
+        $evento->save();
 
         return redirect()->route('eventos.index')->with('success', 'Evento atualizado com sucesso!');
     }
@@ -41,7 +56,7 @@ class EventoController extends Controller
     public function destroy($id)
     {
         $evento = Evento::findOrFail($id);
-        
+
         $evento->disciplinas()->delete();
 
         $evento->delete();
@@ -61,16 +76,24 @@ class EventoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'nome_evento'     => 'required|string|max:255',
             'id_tipo_evento'  => 'required|exists:tipo_evento,id_tipo_evento',
-            'carga_horaria'   => 'nullable|numeric',
-        ]);
+        ];
 
-        $dados = $request->all();
+       
+        if ($request->id_tipo_evento == 1) { 
+            $rules['carga_horaria'] = 'nullable|numeric';
+        } else { 
+            $rules['carga_horaria'] = 'required|numeric|min:1';
+        }
 
-        if ($request->id_tipo_evento == 1) {
-            $dados['carga_horaria'] = 0;
+        $request->validate($rules);
+
+        // Prepara os dados para criação
+        $dados = $request->only(['nome_evento', 'id_tipo_evento', 'carga_horaria']);
+        if ($request->id_tipo_evento == 1) { // Se for 'Curso'
+            $dados['carga_horaria'] = 0; // Força a carga horária para 0
         }
 
         Evento::create($dados);
