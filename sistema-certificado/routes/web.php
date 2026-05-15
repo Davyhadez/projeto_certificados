@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\PessoaController;
 use App\Http\Controllers\Auth\UsuarioController;
 use App\Http\Controllers\Auth\EventoController;
 use App\Http\Controllers\Auth\DisciplinaController;
+use App\Http\Controllers\Auth\TurmaController;
 use Illuminate\Support\Facades\Route;
 
 // Redirecionamento Inicial
@@ -44,13 +45,11 @@ Route::get('/usuario/{id}/historico', [UsuarioController::class, 'show'])
     ->name('usuarios.historico');
 
 
-Route::delete('/usuarios/{id_usuario}', [UsuarioController::class, 'distroy'])
+Route::delete('/usuarios/{id_usuario}', [UsuarioController::class, 'destroy'])
     ->name('usuarios.destroy');
 
 
 // --- ROTAS DE PESSOA ---
-
-
 Route::get('/listaPessoa', [PessoaController::class, 'index'])
     ->middleware('auth')
     ->name('pessoas.index');
@@ -108,6 +107,12 @@ Route::put('/disciplinas/{id_disciplina}', [DisciplinaController::class, 'update
 
 Route::delete('/disciplinas/{id}', [DisciplinaController::class, 'destroy'])
     ->name('disciplinas.destroy');
+
+
+// --- ROTAS DE TURMAS ---
+Route::get('/turmas', [TurmaController::class, 'index'])
+    ->middleware('auth')
+    ->name('turmas.index');
 
 // --- AUTENTICAÇÃO ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

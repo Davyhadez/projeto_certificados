@@ -124,7 +124,13 @@
                                   class="m-0" onsubmit="return confirm('Tem certeza que deseja excluir?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger btn-deletar">
+                                <button type="button"
+                                    class="btn btn-outline-danger btn-deletar"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteModal"
+                                    data-id="{{ $u -> id_usuario }}"
+                                    data-nome="{{ $u -> login_usuario }}">
+                                    <i class="bi bi-trash"></i>
                                     Deletar
                                 </button>
                             </form>
@@ -134,6 +140,35 @@
                     </td>
                 </tr>
                 @endforeach
+
+                <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+                                <form action="" method="POST" id="formDeletarUsuario">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="modal-body">
+                                        <p>Tem certeza que deseja excluir o (a): <br><strong id="nomeLoginExcluir"></strong><br>Esta ação não poderá ser desfeita.</p>
+
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label fw-bold">Digite a sua senha para confirmar:</label>
+                                            <input type="password" name="password_confirm" id="password" class="form-control" placeholder="Digite sua senha" required>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
             </tbody>
         </table>
     </div>
@@ -229,6 +264,20 @@
     });
 
 
+    $('.btn-deletar').on('click', function() {
+                const id_usuario = $(this).data('id');
+                const login_usuario = $(this).data('nome');
+
+                $('#nomeLoginExcluir').text(login_usuario);
+
+                // Usamos :id_usuario para casar com a sua rota do web.php
+                let url = "{{ route('usuarios.destroy', ':id_usuario') }}";
+                url = url.replace(':id_usuario', id_usuario);
+
+                $('#formDeletarUsuario').attr('action', url);
+            });
+
+
     setTimeout(function() {
         var alert = document.querySelector('.alert');
         if (alert) {
@@ -250,6 +299,7 @@
             icone.classList.replace('bi-eye-slash-fill', 'bi-eye-fill')
         }
     }
+
 </script>
 </body>
 

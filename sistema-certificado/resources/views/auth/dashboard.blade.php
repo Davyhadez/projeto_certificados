@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
     <title>Sistema de Certificados - DETRAN-PA</title>
     <style>
         html {
@@ -145,7 +146,7 @@
                     <div class="rounded p-1">
                         <a href="{{ route('dashboard') }}" 
                         class="nav-btn rounded d-block text-white text-decoration-none p-2 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                            <i class="bi bi-house-door-fill"></i> Dashboard
+                            <i class="bi bi-house-door"></i> Dashboard
                         </a>
                     </div>
                 </li>
@@ -154,7 +155,7 @@
                     <div class="rounded p-1">
                         <a href="{{ route('usuarios.index') }}" 
                         class="nav-btn rounded d-block text-white text-decoration-none p-2 {{ request()->routeIs('usuarios.index') ? 'active' : '' }}">
-                            <i class="bi bi-person-fill"></i> Usuários
+                            <i class="bi bi-person"></i> Usuários
                         </a>
                     </div>
                 </li>
@@ -163,7 +164,7 @@
                     <div class="rounded p-1">
                         <a href="{{ route('pessoas.index') }}" 
                         class="nav-btn rounded d-block text-white text-decoration-none p-2 {{ request()->routeIs('pessoas.index') ? 'active' : '' }}">
-                            <i class="bi bi-person-fill"></i> Pessoas
+                            <i class="bi bi-people"></i> Pessoas
                         </a>
                     </div>
                 </li>
@@ -173,6 +174,15 @@
                         <a href="{{ route('eventos.index') }}" 
                         class="nav-btn rounded d-block text-white text-decoration-none p-2 {{ request()->routeIs('eventos.index') ? 'active' : '' }}">
                             <i class="bi bi-calendar-event"></i> Eventos
+                        </a>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="rounded p-1">
+                        <a href="{{ route('turmas.index') }}" 
+                        class="nav-btn rounded d-block text-white text-decoration-none p-2 {{ request()->routeIs('turmas.index') ? 'active' : '' }}">
+                            <i class="bi bi-mortarboard"></i> Turmas
                         </a>
                     </div>
                 </li>
@@ -248,6 +258,7 @@
             </div>
         </div>
     </div>
+
 </body>
 
 </html>

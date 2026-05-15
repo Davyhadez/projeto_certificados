@@ -7,6 +7,8 @@ use App\Models\Lotacao;
 use App\Models\Pessoa;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UsuarioController extends Controller
 {
@@ -100,11 +102,29 @@ class UsuarioController extends Controller
     }
 
 
-    public function destroy($id_usuario)
+    public function destroy(Request $request, $id_usuario)
     {
-        $usuario = Usuario::findOrFail($id_usuario);
-        $usuario->delete();
+        $request->validate([
+            'password_confirm' => 'required'
+        ]);
 
-        return redirect()->route('usuarios.index')->with('success', 'Usuário excluído com sucesso!');
+        if (md5($request->password_confirm) !== Auth::user()->senha_usuario) {
+            return back()->withErrors(['password_confirm' => 'Senha incorreta.'])->withInput();
+        }
+
+
+        try {
+            $usuario = Usuario::findOrFail($id_usuario);
+            $id_usuario = $usuario->id_usuario;
+            $usuario->delete();
+
+            \App\Models\User::where('id_pessoa', $id_usuario)->delete();
+            $usuario = Usuario::findOrFail($id_usuario);
+            $usuario->delete();
+
+            return redirect()->route('usuarios.index')->with('success', 'Registro removido com sucesso!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Não foi possível excluir: ' . $e->getMessage());
+        }
     }
 }
