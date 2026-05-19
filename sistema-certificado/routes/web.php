@@ -114,6 +114,16 @@ Route::get('/turmas', [TurmaController::class, 'index'])
     ->middleware('auth')
     ->name('turmas.index');
 
+Route::post('/turmas', [TurmaController::class, 'store'])
+    ->name('turmas.store');
+
+Route::put('/turmas/{id}', [TurmaController::class, 'update'])
+    ->name('turmas.update');
+
+Route::delete('/turmas/{id}', [\App\Http\Controllers\Auth\TurmaController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('turmas.destroy');
+
 // --- AUTENTICAÇÃO ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

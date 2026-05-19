@@ -40,61 +40,78 @@
             <table class="table table-striped table-hover table-bordered align-middle m-0">
                 <thead class="table-light">
                     <tr class="text-uppercase" style="font-size: 0.9rem;">
-                        <th scope="col" style="width: 30%;">Evento/Curso</th>
-                        <th scope="col" class="text-center" style="width: 12%;">Status</th>
-                        <th scope="col" class="text-center" style="width: 15%;">Local</th>
-                        <th scope="col" class="text-center" style="width: 10%;">Alunos</th>
-                        <th scope="col" class="text-center" style="width: 13%;">Carga Horária</th>
-                        <th scope="col" class="text-center" style="width: 20%;">Período (Início/Fim)</th>
+                        <th scope="col" class="text-center" style="width: 20%;">Evento</th>
+                        <th scope="col" class="text-center" style="width: 5%;">Status</th>
+                        <th scope="col" class="text-center" style="width: 5%;">Local</th>
+                        <th scope="col" class="text-center" style="width: 12%;">Total de Alunos</th>
+                        <th scope="col" class="text-center" style="width: 10%;">Carga Horária</th>
+                        <th scope="col" class="text-center" style="width: 15%;">Período (Início/Fim)</th>
+                        <th scope="col" class="text-center" style="width: 13%;">Data de Registro</th>                       
                         <th scope="col" class="text-center col-acoes">Ações</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td class="none">Agente de Fiscalização de Trânsito</td>
-                        <td class="text-center">
-                            <span class="badge bg-success text-uppercase" style="font-size: 0.8rem; padding: 5px 10px;">Liberado</span>
-                        </td>
-                        <td class="text-center">Ananindeua</td>
-                        <td class="text-center fw-bold">32</td>
-                        <td class="text-center">40 HORAS/AULA</td>
-                        <td class="text-center">10/11/2025 - 09/12/2025</td>
-                        <td class="d-flex justify-content-center gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-secondary fw-bold btn-visualizar" title="Ver Alunos">
-                                <i class="bi bi-people-fill"></i>
-                            </a>
+                    @if($turmas->count() > 0)
+                        @foreach($turmas as $turma)
+                            <tr>
+                                <td class="none">{{ $turma->evento->nome_evento ?? 'Evento não encontrado' }}</td>
+                                <td class="text-center">
+                                    @if($turma->certificado_liberado == 1)
+                                        <span class="badge bg-success text-uppercase" style="font-size: 0.8rem; padding: 5px 10px;">Liberado</span>
+                                    @else
+                                        <span class="badge bg-warning text-uppercase" style="font-size: 0.8rem; padding: 5px 10px;">Pendente</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">{{ $turma->local_oferta }}</td>
+                                <td class="text-center fw-bold">2 alunos</td> 
+                                <td class="text-center">
+                                    @if($turma->evento->id_tipo_evento == 1)
+                                    <strong>{{ $turma->evento->disciplinas->sum('carga_horaria') }}</strong> HORAS/AULA
+                                    @else
+                                    {{-- Valor fixo para PALESTRAS --}}
+                                    {{ $turma->evento->carga_horaria }} HORAS/AULA
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    {{ $turma->data_inicio ? \Carbon\Carbon::parse($turma->data_inicio)->format('d/m/Y') : 'N/A' }} - 
+                                    {{ $turma->data_fim ? \Carbon\Carbon::parse($turma->data_fim)->format('d/m/Y') : 'N/A' }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $turma->data_registro ? \Carbon\Carbon::parse($turma->data_registro)->format('d/m/Y') : 'N/A' }}
+                                </td>                        
+                                <td class="d-flex justify-content-center gap-2">
+                                    <a href="#" class="btn btn-sm btn-outline-secondary fw-bold btn-visualizar-turma" title="Ver Alunos">
+                                        <i class="bi bi-people-fill"></i> Visualizar
+                                    </a>
 
-                            <button type="button" class="btn btn-primary btn-editar"
-                                data-bs-toggle="modal"
-                                data-bs-target="#modalEditarTurma">
-                                <i class="bi bi-pencil-square"></i>
-                                Editar
-                            </button>
+                                    <button type="button" class="btn btn-sm btn-primary btn-editar-turma"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEditarTurma">
+                                        <i class="bi bi-pencil-square"></i> Editar
+                                    </button>
 
-                            <form action="#" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta turma?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger btn-deletar">
-                                    <i class="bi bi-trash"></i>
-                                    <span>Deletar</span>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="7" class="text-center text-muted">Nenhuma turma encontrada.</td>
-                    </tr>
+                                    <form action="{{ route('turmas.destroy', $turma->id_turma) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta turma?')">
+                                        @csrf
+                                        @method('DELETE') <button type="submit" class="btn btn-sm btn-outline-danger btn-deletar-turma">
+                                            <i class="bi bi-trash"></i> <span>Deletar</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">Nenhuma turma encontrada no banco de dados.</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
 
         <div class="d-flex justify-content-between align-items-center mt-3 text-muted" style="font-size: 0.85rem;">
             <div>
-                Total de turmas: <span class="fw-bold">1</span>
-            </div>
-            <div>
-                {{-- Espaço para os links de paginação do Laravel futuramente --}}
+                Total de turmas: <span class="fw-bold">{{ $turmas->count() }}</span>
             </div>
         </div>
     </div>
@@ -112,26 +129,26 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <form action="#" method="POST" autocomplete="off">
+            <form action="{{ route('turmas.store') }}" method="POST" autocomplete="off">
                 @csrf
                 <div class="modal-body row g-3">
                     <div class="col-md-12">
-                        <label class="form-label fw-bold">Selecione o Evento/Curso</label>
+                        <label class="form-label fw-bold">Título do Evento</label>
                         <select name="id_evento" class="form-select" required>
                             <option value="" disabled selected>Escolha o evento...</option>
+                            @foreach($eventos as $evento)
+                                <option value="{{ $evento->id_evento }}">{{ $evento->nome_evento }}</option>
+                            @endforeach
                         </select>
                     </div>
                     
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Local da Turma</label>
-                        <input type="text" name="local_turma" class="form-control" placeholder="Ex: Auditório Principal, Ananindeua" required>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Status Inicial</label>
-                        <select name="status_turma" class="form-select" required>
-                            <option value="Liberado">Liberado</option>
-                            <option value="Bloqueado">Bloqueado</option>
+                        <label class="form-label fw-bold">Local do Evento (Municípios do PA)</label>
+                        <select name="local_oferta" class="form-select" required>
+                            <option value="" disabled selected>Selecione o Município...</option>
+                            @foreach($municipios as $municipio)
+                                <option value="{{ $municipio['nome'] }}">{{ $municipio['nome'] }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -143,6 +160,16 @@
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Data de Término</label>
                         <input type="date" name="data_fim" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Quantidade Máxima de Participantes</label>
+                        <input type="number" name="quantidade_maxima" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Descrição do Evento</label>
+                        <textarea name="descricao" class="form-control" required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer bg-light border-0">
@@ -166,28 +193,33 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <form action="#" method="POST">
+            <form action="{{ route('turmas.update', ['id' => $turma->id_turma]) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="modal-body row g-3">
                     <div class="col-md-12">
-                        <label class="form-label fw-bold">Evento/Curso</label>
+                        <label class="form-label fw-bold">Título do Evento</label>
                         <select name="id_evento" class="form-select" required>
                             <option value="" disabled>Selecione o evento...</option>
+                            @foreach($eventos as $evento)
+                                <option value="{{ $evento->id_evento }}">{{ $evento->nome_evento }}</option>
+                            @endforeach
                         </select>
                     </div>
                     
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Local da Turma</label>
-                        <input type="text" name="local_turma" class="form-control" required>
+                        <label class="form-label fw-bold">Local do Evento (Municípios do PA)</label>
+                        <select name="local_oferta" class="form-select" required>
+                            <option value="" disabled>Selecione o Município...</option>
+                            @foreach($municipios as $municipio)
+                                <option value="{{ $municipio['nome'] }}">{{ $municipio['nome'] }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Status</label>
-                        <select name="status_turma" class="form-select" required>
-                            <option value="Liberado">Liberado</option>
-                            <option value="Bloqueado">Bloqueado</option>
-                        </select>
+                        <label class="form-label fw-bold">Quantidade Máxima de Participantes</label>
+                        <input type="number" name="quantidade_maxima" class="form-control" required>
                     </div>
 
                     <div class="col-md-6">
@@ -198,6 +230,11 @@
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Data de Término</label>
                         <input type="date" name="data_fim" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Descrição do Evento</label>
+                        <textarea name="descricao" class="form-control" required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer bg-light border-0">

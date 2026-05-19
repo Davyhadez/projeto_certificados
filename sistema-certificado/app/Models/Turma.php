@@ -16,4 +16,11 @@ class Turma extends Model
         'id_evento', 'id_usuario', 'id_situacao_turma',
         'frequencia'
     ];
+
+
+    public function evento()
+    {
+        // AQUI, UMA TURMA IRÁ PERTENCER A UM EVENTO
+        return $this->belongsTo(Evento::class, 'id_evento', 'id_evento');
+    }
 }
