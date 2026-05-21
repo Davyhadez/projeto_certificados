@@ -2,8 +2,6 @@
 
 @section('conteudo') {{-- Tudo daqui para baixo vai aparecer no lugar do @yield --}}
 <title>lista de pessoas</title>
-
-<body>
     <style>
         td:last-child {
             white-space: nowrap;

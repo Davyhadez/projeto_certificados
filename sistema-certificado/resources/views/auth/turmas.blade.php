@@ -64,7 +64,9 @@
                                     @endif
                                 </td>
                                 <td class="text-center">{{ $turma->local_oferta }}</td>
-                                <td class="text-center fw-bold">2 alunos</td> 
+                                <td class="text-center fw-bold">
+                                    {{ $turma->alunos_count ?? 0 }}/{{ $turma->quantidade_maxima }}
+                                </td> 
                                 <td class="text-center">
                                     @if($turma->evento->id_tipo_evento == 1)
                                     <strong>{{ $turma->evento->disciplinas->sum('carga_horaria') }}</strong> HORAS/AULA
@@ -82,12 +84,21 @@
                                 </td>                        
                                 <td class="d-flex justify-content-center gap-2">
                                     <a href="#" class="btn btn-sm btn-outline-secondary fw-bold btn-visualizar-turma" title="Ver Alunos">
-                                        <i class="bi bi-people-fill"></i> Visualizar
+                                        <i class="bi bi-people-fill"></i> Participantes
                                     </a>
 
                                     <button type="button" class="btn btn-sm btn-primary btn-editar-turma"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#modalEditarTurma">
+                                        data-bs-target="#modalEditarTurma"
+                                        data-id="{{ $turma->id_turma }}"
+                                        data-id-evento="{{ $turma->id_evento }}"
+                                        data-qtd-atual="{{ $turma->alunos_count ?? 0 }}"
+                                        data-descricao="{{ $turma->descricao }}"
+                                        data-local="{{ $turma->local_oferta }}"
+                                        data-qtd-maxima="{{ $turma->quantidade_maxima }}"
+                                        data-data-inicio="{{ $turma->data_inicio }}"
+                                        data-data-fim="{{ $turma->data_fim }}"
+                                        >
                                         <i class="bi bi-pencil-square"></i> Editar
                                     </button>
 
@@ -199,7 +210,7 @@
                 <div class="modal-body row g-3">
                     <div class="col-md-12">
                         <label class="form-label fw-bold">Título do Evento</label>
-                        <select name="id_evento" class="form-select" required>
+                        <select name="id_evento" class="form-select">
                             <option value="" disabled>Selecione o evento...</option>
                             @foreach($eventos as $evento)
                                 <option value="{{ $evento->id_evento }}">{{ $evento->nome_evento }}</option>
@@ -209,7 +220,7 @@
                     
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Local do Evento (Municípios do PA)</label>
-                        <select name="local_oferta" class="form-select" required>
+                        <select name="local_oferta" class="form-select">
                             <option value="" disabled>Selecione o Município...</option>
                             @foreach($municipios as $municipio)
                                 <option value="{{ $municipio['nome'] }}">{{ $municipio['nome'] }}</option>
@@ -219,22 +230,22 @@
 
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Quantidade Máxima de Participantes</label>
-                        <input type="number" name="quantidade_maxima" class="form-control" required>
+                        <input type="number" name="quantidade_maxima" class="form-control">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Data de Início</label>
-                        <input type="date" name="data_inicio" class="form-control" required>
+                        <input type="date" name="data_inicio" class="form-control">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Data de Término</label>
-                        <input type="date" name="data_fim" class="form-control" required>
+                        <input type="date" name="data_fim" class="form-control">
                     </div>
 
                     <div class="col-md-12">
                         <label class="form-label fw-bold">Descrição do Evento</label>
-                        <textarea name="descricao" class="form-control" required></textarea>
+                        <textarea name="descricao" class="form-control"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer bg-light border-0">
@@ -246,4 +257,55 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+   $(document).ready(function () {
+        $('form').on('submit', function (e) {
+            var form = this;
+            var botao = $(this).find('button[type="submit"], .btn-teal');
+
+
+            if (botao.prop('disabled')) {
+                e.preventDefault();
+                return false;
+            }
+
+            botao.prop('disabled', true);
+            botao.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Salvando...');
+
+
+            e.preventDefault();
+            setTimeout(function () {
+                form.submit();
+            }, 100);
+        });
+
+        $('.btn-editar-turma').on('click', function () {
+            var linha = $(this).closest('tr');
+            var idTurma = $(this).data('id'); // Garanta que o botão tenha data-id="{{ $turma->id_turma }}"
+            var descricao = $(this).data('descricao'); 
+            var idEvento = $(this).data('id-evento');
+            var localOferta = $(this).data('local');
+            var qtdMaxima = $(this).data('qtd-maxima');
+            var dataInicio = $(this).data('data-inicio');
+            var dataFim = $(this).data('data-fim');
+
+            var modal = $('#modalEditarTurma');
+            var form = modal.find('form');
+            var urlUpdate = "{{ route('turmas.index') }}/" + idTurma;
+            form.attr('action', urlUpdate);
+
+            modal.find('select[name="id_evento"]').val(idEvento);
+            modal.find('select[name="local_oferta"]').val(localOferta);
+            modal.find('input[name="quantidade_maxima"]').val(qtdMaxima);
+            modal.find('input[name="data_inicio"]').val(dataInicio);
+            modal.find('input[name="data_fim"]').val(dataFim);
+            modal.find('textarea[name="descricao"]').val(descricao);
+        });
+
+        $('#modalCadastrarTurma').on('hidden.bs.modal', function () {
+            $(this).find('form')[0].reset();
+        });
+    });
+</script>
 @endsection

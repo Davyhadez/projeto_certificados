@@ -261,6 +261,19 @@
         </div>
     </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('form').on('submit', function () {
+
+    var botao = $(this).find('button[type="submit"]');
+        
+        botao.prop('disabled', true);
+        
+        botao.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Salvando...');
+    });
+});
+</script>
 </body>
 
 </html>

@@ -301,8 +301,4 @@
     }
 
 </script>
-</body>
-
-</html>
-
 @endsection

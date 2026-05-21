@@ -16,7 +16,7 @@ class TurmaController extends Controller
         {
             $eventos = Evento::all();
 
-            $turmas = Turma::with('evento')->get();
+            $turmas = Turma::with('evento')->withCount('alunos')->get();
 
             $response = Http::get('https://servicodados.ibge.gov.br/api/v1/localidades/estados/15/municipios?orderBy=nome');
 
@@ -40,11 +40,12 @@ class TurmaController extends Controller
             ]);
 
             $validatedData['id_usuario'] = Auth::id();
+
             $situacao = SituacaoTurma::where('descricao_situacao_turma', 'TURMA ABERTA')->first();
 
             $validatedData['id_situacao_turma'] = $situacao ? $situacao->id_situacao_turma : 1;
 
-            \App\Models\Turma::create($validatedData);
+            $validateData['data_registro'] = now()->format('Y-m-d');
 
             Turma::create($validatedData);
 

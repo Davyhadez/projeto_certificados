@@ -9,6 +9,7 @@ class Turma extends Model
     protected $table = 'turma';
     protected $primaryKey = 'id_turma';
     public $timestamps = false;
+
     protected $fillable = [
         'descricao', 'data_inicio', 'data_fim',
         'data_registro', 'local_oferta', 'quantidade_maxima',
@@ -22,5 +23,10 @@ class Turma extends Model
     {
         // AQUI, UMA TURMA IRÁ PERTENCER A UM EVENTO
         return $this->belongsTo(Evento::class, 'id_evento', 'id_evento');
+    }
+
+    public function alunos()
+    {
+        return $this->hasMany(\App\Models\Inscricao::class, 'id_turma', 'id_turma');
     }
 }
