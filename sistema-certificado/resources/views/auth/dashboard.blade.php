@@ -213,7 +213,7 @@
                 
                 <div class="d-flex align-items-center">
                     <span class="me-3 fw-bold text-uppercase">
-                        {{ Auth::user()->login_usuario }} <i class="bi bi-person-circle"></i>
+                        {{ Auth::user()->login_usuario ?? 'Visitante' }} <i class="bi bi-person-circle"></i>
                     </span>
                 </div>
             </nav>

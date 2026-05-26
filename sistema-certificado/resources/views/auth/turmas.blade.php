@@ -83,7 +83,7 @@
                                     {{ $turma->data_registro ? \Carbon\Carbon::parse($turma->data_registro)->format('d/m/Y') : 'N/A' }}
                                 </td>                        
                                 <td class="d-flex justify-content-center gap-2">
-                                    <a href="#" class="btn btn-sm btn-outline-secondary fw-bold btn-visualizar-turma" title="Ver Alunos">
+                                    <a href="{{ route('turmas.participantes', ['id' => $turma->id_turma]) }}" class="btn btn-sm btn-outline-secondary fw-bold btn-visualizar-turma" title="Ver Alunos">
                                         <i class="bi bi-people-fill"></i> Participantes
                                     </a>
 

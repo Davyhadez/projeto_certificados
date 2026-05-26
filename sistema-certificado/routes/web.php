@@ -120,6 +120,13 @@ Route::post('/turmas', [TurmaController::class, 'store'])
 Route::put('/turmas/{id}', [TurmaController::class, 'update'])
     ->name('turmas.update');
 
+Route::get('/turmas/{id}/participantes', [TurmaController::class, 'participantes'])
+->name('turmas.participantes');
+
+Route::get('/turmas/{id}', [TurmaController::class, 'show'])
+    ->middleware('auth')
+    ->name('turmas.show');
+
 Route::delete('/turmas/{id}', [\App\Http\Controllers\Auth\TurmaController::class, 'destroy'])
     ->middleware('auth')
     ->name('turmas.destroy');

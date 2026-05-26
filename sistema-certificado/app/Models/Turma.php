@@ -25,8 +25,27 @@ class Turma extends Model
         return $this->belongsTo(Evento::class, 'id_evento', 'id_evento');
     }
 
+    public function instrutores()
+    {
+        return $this->belongsToMany(
+            Pessoa::class,
+            'instrutor',
+            'id_turma',
+            'id_pessoa',
+            'id_turma',
+            'id_pessoa'
+        );
+    }
+
     public function alunos()
     {
-        return $this->hasMany(\App\Models\Inscricao::class, 'id_turma', 'id_turma');
+        return $this->belongsToMany(
+            Pessoa::class,
+            'inscricao',
+            'id_turma',
+            'id_pessoa',
+            'id_turma',
+            'id_pessoa'
+        )->withPivot('conceito', 'frequencia');
     }
 }
