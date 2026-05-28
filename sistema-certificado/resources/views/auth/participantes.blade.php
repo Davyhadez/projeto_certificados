@@ -29,16 +29,45 @@
                 </p>
                 <p class="mb-1"><strong class="text-dark">Data de início:</strong> {{ $turma->data_inicio ? \Carbon\Carbon::parse($turma->data_inicio)->format('d/m/Y') : 'N/A' }}</p>
                 <p class="mb-1"><strong class="text-dark">Data fim:</strong> {{ $turma->data_fim ? \Carbon\Carbon::parse($turma->data_fim)->format('d/m/Y') : 'N/A' }}</p>
-                <p class="mb-1"><strong class="text-dark">Descrição:</strong></p>
-                <p class="text-muted ps-3 mb-0">{{ $turma->descricao ?? 'teste' }}</p>
+                <p class="mb-1"><strong class="text-dark">Descrição:</strong> {{ $turma->descricao ?? 'Sem descrição.' }}</p>
             </div>
+            <br>
+            @if($turma->certificado_liberado == 1)
+                <div class="alert alert-success d-flex align-items-center rounded border-0 shadow-sm p-3 mb-10" style="background-color: #d1e7dd; color: #0f5132;">
+                    <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                    <div>
+                        <strong>Certificados liberados!</strong> Os certificados estão assinados e disponíveis para emissão.
+                    </div>
+                </div>
+            @endif
+            
         </div>
 
-        <div class="mb-4">
-            <button class="btn text-white px-4 py-2 btn-teal">
-                Fechar turma
-            </button>
-        </div>
+        @if($turma->certificado_liberado != 1)
+            <div class="mb-4">
+                <form action="{{ route('turmas.fechar', $turma->id_turma ?? $turma->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn text-white px-4 py-2 btn-teal" onclick="return confirm('Deseja realmente fechar esta turma?')">
+                        Fechar turma
+                    </button>
+                </form>
+            </div>
+        @endif
+
+        @if($turma->certificado_liberado == 1)
+            <div class="mb-4">
+                <h5 class="fw-bold text-dark mb-2">Disciplinas:</h5>
+                <div class="border rounded p-3 bg-light">
+                    @if($turma->evento && $turma->evento->id_tipo_evento == 1 && $turma->evento->disciplinas->count() > 0)
+                        @foreach($turma->evento->disciplinas as $disciplina)
+                            <span class="badge bg-white text-dark border p-2 me-2 mb-2">{{ $disciplina->nome_disciplina }}</span>
+                        @endforeach
+                    @else
+                        <span class="text-muted">aula01</span>
+                    @endif
+                </div>
+            </div>
+        @endif
 
         <hr class="text-secondary opacity-25 mb-4">
 
@@ -59,17 +88,29 @@
                             <tr>
                                 <td class="ps-4">{{ $instrutor->nome_pessoa }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-4">
-                                        <button class="btn btn-outline-success btn-emitir">
-                                            Emitir Certificado
-                                        </button>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        @if($turma->certificado_liberado == 1)
+                                            {{-- Turma Fechada: Ação de Emitir Certificado --}}
+                                            <button class="btn btn-outline-success btn-sm px-3">
+                                                Emitir Certificado
+                                            </button>
+                                        @else
+                                            {{-- Turma Aberta: Botão Vermelho de Remover --}}
+                                            <form action="{{ route('turmas.removerInstrutor', [$turma->id_turma ?? $turma->id, $instrutor->id_pessoa]) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm px-2" title="Remover Instrutor" onclick="return confirm('Remover este instrutor da turma?')">
+                                                    <i class="bi bi-person-dash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="2" class="text-center text-muted py-4 font-italic bg-white">
-                                    Este evento ainda não tem instruores selecionados.
+                                    Este evento ainda não tem instrutores selecionados.
                                 </td>
                             </tr>
                         @endforelse
@@ -77,11 +118,13 @@
                 </table>
             </div>
 
-            <div class="mt-3 d-flex justify-content-center">
-                <button type="button" class="btn btn-primary px-4 shadow-sm btn-teal" data-bs-toggle="modal" data-bs-target="#modalAddInstrutor">
-                    Adicionar instrutor
-                </button>
-            </div>
+            @if($turma->certificado_liberado != 1)
+                <div class="mt-3 d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary px-4 shadow-sm btn-teal" data-bs-toggle="modal" data-bs-target="#modalAddInstrutor">
+                        Adicionar instrutor
+                    </button>
+                </div>
+            @endif
         </div>
 
         {{-- SEÇÃO DE ALUNOS --}}
@@ -103,15 +146,27 @@
                         @forelse($turma->alunos as $aluno)
                             <tr>
                                 <td class="ps-4">{{ $aluno->nome_pessoa }}</td>
-                                <td class="text-center">{{ $aluno->pivot->conceito ?? 'Pendente' }}</td>
+                                <td class="text-center">{{ $aluno->pivot->conceito ?? '---' }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-4">
-                                        <button class="btn btn-outline-success btn-emitir">
-                                            Emitir Certificado
-                                        </button>
-                                        <button class="btn btn-outline-success btn-emitir">
-                                            Baixar Frequência da Turma
-                                        </button>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        @if($turma->certificado_liberado == 1)
+                                            {{-- Turma Fechada: Ações de Certificado e Frequência --}}
+                                            <button class="btn btn-outline-success btn-sm px-3">
+                                                Emitir Certificado
+                                            </button>
+                                            <button class="btn btn-outline-success btn-sm px-3">
+                                                Baixar Frequência da Turma
+                                            </button>
+                                        @else
+                                            {{-- Turma Aberta: Botão Vermelho de Remover --}}
+                                            <form action="{{ route('turmas.removerAluno', [$turma->id_turma ?? $turma->id, $aluno->id_pessoa]) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm px-2" title="Remover Aluno" onclick="return confirm('Remover este aluno da turma?')">
+                                                    <i class="bi bi-person-dash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -126,11 +181,13 @@
                 </table>
             </div>
 
-            <div class="mt-3 d-flex justify-content-center">
-                <button type="button" class="btn btn-primary px-4 shadow-sm btn-teal" data-bs-toggle="modal" data-bs-target="#modalAddAlunos">
-                    Adicionar Pessoas
-                </button>
-            </div>
+            @if($turma->certificado_liberado != 1)
+                <div class="mt-3 d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary px-4 shadow-sm btn-teal" data-bs-toggle="modal" data-bs-target="#modalAddAlunos">
+                        Adicionar Pessoas
+                    </button>
+                </div>
+            @endif
         </div>
 
     </div>
@@ -164,15 +221,19 @@
                                 <th>Ação</th>
                             </tr>
                         </thead>
-                        {{-- CORRIGIDO: Adicionado id para o JS encontrar o corpo da tabela --}}
                         <tbody id="tabelaPessoasModal">
                             @foreach($instrutoresDisponiveis as $p)
                             <tr>
-                                {{-- CORRIGIDO: Adicionada a classe nome-item --}}
                                 <td class="text-start ps-3 fw-medium nome-item">{{ $p->nome_pessoa }}</td>
                                 <td class="text-muted">{{ $p->cpf }}</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm px-3"><i class="bi bi-check2"></i> Adicionar</button>
+                                    <form action="{{ route('turmas.vincularInstrutor', $turma->id_turma ?? $turma->id) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="id_pessoa" value="{{ $p->id_pessoa }}">
+                                        <button type="submit" class="btn btn-success btn-sm px-3">
+                                            <i class="bi bi-check2"></i> Adicionar
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach
@@ -195,7 +256,6 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4" style="max-height: 70vh; overflow-y: auto;">
-                {{-- NOVO: Caixa de pesquisa adicionada também no modal de alunos --}}
                 <div class="mb-3">
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0 text-secondary">
@@ -213,14 +273,19 @@
                                 <th>Ação</th>
                             </tr>
                         </thead>
-                        {{-- CORRIGIDO: Adicionado id e preparado o loop para quando você configurar os alunos no controller --}}
                         <tbody id="tabelaAlunosModal">
                             @foreach($instrutoresDisponiveis as $p)
                             <tr>
                                 <td class="text-start ps-3 fw-medium nome-item">{{ $p->nome_pessoa }}</td>
                                 <td class="text-muted">{{ $p->cpf }}</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm px-3"><i class="bi bi-check2"></i> Adicionar</button>
+                                    <form action="{{ route('turmas.vincularAluno', $turma->id_turma ?? $turma->id) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="id_pessoa" value="{{ $p->id_pessoa }}">
+                                        <button type="submit" class="btn btn-success btn-sm px-3">
+                                            <i class="bi bi-check2"></i> Adicionar
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach
@@ -232,7 +297,6 @@
     </div>
 </div>
 
-{{-- SCRIPT DE FILTRO EM TEMPO REAL --}}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     

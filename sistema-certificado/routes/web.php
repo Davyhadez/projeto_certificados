@@ -127,6 +127,21 @@ Route::get('/turmas/{id}', [TurmaController::class, 'show'])
     ->middleware('auth')
     ->name('turmas.show');
 
+Route::post('/turmas/{id}/vincular-instrutor', [TurmaController::class, 'vincularInstrutor'])
+    ->name('turmas.vincularInstrutor');
+
+Route::post('/turmas/{id}/vincular-aluno', [TurmaController::class, 'vincularAluno'])
+    ->name('turmas.vincularAluno');
+
+Route::post('/turmas/{id}/fechar', [TurmaController::class, 'fecharTurma'])
+    ->name('turmas.fechar');
+
+Route::delete('/turmas/{id_turma}/removerInstrutor/{id_pessoa}', [TurmaController::class, 'removerInstrutor'])
+    ->name('turmas.removerInstrutor');
+
+Route::delete('/turmas/{id_turma}/removerAluno/{id_pessoa}', [TurmaController::class, 'removerAluno'])
+    ->name('turmas.removerAluno');
+
 Route::delete('/turmas/{id}', [\App\Http\Controllers\Auth\TurmaController::class, 'destroy'])
     ->middleware('auth')
     ->name('turmas.destroy');

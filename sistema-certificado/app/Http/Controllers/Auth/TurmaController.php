@@ -74,16 +74,6 @@ class TurmaController extends Controller
     }
 
 
-
-    public function destroy($id)
-    {
-        $turma = \App\Models\Turma::findOrFail($id);
-        $turma->delete();
-
-        return redirect()->route('turmas.index')->with('success', 'Turma excluída com sucesso!');
-    }
-
-
     
     public function participantes($id)
     { 
@@ -105,5 +95,82 @@ class TurmaController extends Controller
         $instrutoresDisponiveis = Pessoa::where('tipo', 'instrutor')->get();
 
         return view('auth.participantes', compact('turma', 'instrutoresDisponiveis'));
+    }
+
+
+
+    public function vincularInstrutor(Request $request, $id)
+    {
+        $request->validate([
+            'id_pessoa' => 'required|exists:pessoa,id_pessoa',
+        ]);
+
+        $turma = Turma::findOrFAil($id);
+
+        $turma->instrutores()->syncWithoutDetaching([$request->id_pessoa]);
+
+        return redirect()->back()->with('success', 'Instrutor adicionado com sucesso!');
+    }
+
+
+
+    public function vincularAluno(Request $request, $id)
+    {
+        $request->validate([
+            'id_pessoa' => 'required|exists:pessoa,id_pessoa',
+        ]);
+
+        $turma = Turma::findOrFAil($id);
+
+        $turma->alunos()->syncWithoutDetaching([$request->id_pessoa]);
+
+        return redirect()->back()->with('success', 'Aluno adicionado com sucesso!');
+    }
+
+
+
+    public function destroy($id)
+    {
+        $turma = \App\Models\Turma::findOrFail($id);
+        $turma->delete();
+
+        return redirect()->route('turmas.index')->with('success', 'Turma excluída com sucesso!');
+    }
+
+    public function removerAluno($id_turma, $id_pessoa)
+    {
+
+        $turma = Turma::findOrFail($id_turma);
+
+        $turma->alunos()->detach($id_pessoa);
+
+        return redirect()->back()->with('success', 'Aluno removido com sucesso!');
+    }
+
+
+
+    public function removerInstrutor($id_turma, $id_pessoa)
+    {
+
+        $turma = Turma::findOrFail($id_turma);
+
+        $turma->instrutores()->detach($id_pessoa);
+
+        return redirect()->back()->with('success', 'Instrutor removido com sucesso!');
+    }
+
+
+
+    public function fecharTurma($id)
+    {
+        $turma = Turma::findOrFail($id);
+
+            $turma->id_situacao_turma = 2; 
+            $turma->certificado_liberado = 1;
+            $turma->data_liberacao_certificado = now()->format('Y-m-d');
+
+        $turma->save();
+
+        return redirect()->back()->with('success', 'Turma fechada e certificados liberados com sucesso!');
     }
 }
