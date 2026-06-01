@@ -9,6 +9,7 @@ use App\Models\Pessoa;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 
 class TurmaController extends Controller
@@ -42,11 +43,13 @@ class TurmaController extends Controller
 
         $validatedData['id_usuario'] = Auth::id();
 
+
+
         $situacao = SituacaoTurma::where('descricao_situacao_turma', 'TURMA ABERTA')->first();
 
         $validatedData['id_situacao_turma'] = $situacao ? $situacao->id_situacao_turma : 1;
 
-        $validateData['data_registro'] = now()->format('Y-m-d');
+        $validatedData['data_registro'] = now()->format('Y-m-d');
 
         Turma::create($validatedData);
 
@@ -132,6 +135,11 @@ class TurmaController extends Controller
     public function destroy($id)
     {
         $turma = \App\Models\Turma::findOrFail($id);
+
+        $turma->alunos()->detach();
+
+        $turma->instrutores()->detach();
+
         $turma->delete();
 
         return redirect()->route('turmas.index')->with('success', 'Turma excluída com sucesso!');

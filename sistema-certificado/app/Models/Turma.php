@@ -21,7 +21,6 @@ class Turma extends Model
 
     public function evento()
     {
-        // AQUI, UMA TURMA IRÁ PERTENCER A UM EVENTO
         return $this->belongsTo(Evento::class, 'id_evento', 'id_evento');
     }
 

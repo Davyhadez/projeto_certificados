@@ -100,7 +100,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm px-2" title="Remover Instrutor" onclick="return confirm('Remover este instrutor da turma?')">
-                                                    <i class="bi bi-person-dash"></i>
+                                                    <i class="bi bi-person-dash"> Excluir Instrutor</i>
                                                 </button>
                                             </form>
                                         @endif
@@ -163,7 +163,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm px-2" title="Remover Aluno" onclick="return confirm('Remover este aluno da turma?')">
-                                                    <i class="bi bi-person-dash"></i>
+                                                    <i class="bi bi-person-dash"> Excluir Aluno</i>
                                                 </button>
                                             </form>
                                         @endif
@@ -329,6 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     configurarFiltro('buscaInstrutor', 'tabelaPessoasModal');
     configurarFiltro('buscaAluno', 'tabelaAlunosModal');
+
 });
 </script>
 

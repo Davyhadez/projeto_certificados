@@ -180,7 +180,6 @@
             </table>
         </div>
 
-        {{-- Essa div é para o controle de paginação --}}
         <div class="d-flex justify-content-center mt-5 mb-3 pagination-container">
             {{ $pessoas->links() }}
         </div>
@@ -300,6 +299,7 @@
             setTimeout(function() {
                 var alertElement = document.querySelector('.alert');
                 if (alertElement) {
+
                     var bsAlert = new bootstrap.Alert(alertElement);
                     bsAlert.close();
                 }

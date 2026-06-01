@@ -36,6 +36,30 @@
             </div>
         </form>
 
+{{-- ================================ --}}
+{{-- CONTAINER: PARA ALERTAS FLUENTES --}}
+{{-- ================================ --}}
+
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center rounded border-0 shadow-sm p-3 mb-4" role="alert" style="background-color: #d1e7dd; color: #0f5132;">
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                <div>
+                    {{ session('success') }}
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center rounded border-0 shadow-sm p-3 mb-4" role="alert" style="background-color: #f8d7da; color: #842029;">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <div>
+                    {{ session('error') }}
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <div class="table-responsive">
             <table class="table table-striped table-hover table-bordered align-middle m-0">
                 <thead class="table-light">
@@ -306,6 +330,18 @@
         $('#modalCadastrarTurma').on('hidden.bs.modal', function () {
             $(this).find('form')[0].reset();
         });
+    });
+
+    document.addEventListener('DOMContentLoaded', function (){
+        setTimeout(function() {
+            var alertElements = document.querySelectorAll('.alert-dismissible');
+            alertElements.forEach(function(alertElement){
+                if (alertElement) {
+                    var bsAlert = new bootstrap.Alert(alertElement);
+                    bsAlert.close()
+                }
+            });
+        }, 5000);
     });
 </script>
 @endsection

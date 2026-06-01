@@ -223,7 +223,6 @@
                     @if(View::hasSection('conteudo'))
                         @yield('conteudo')
     
-                        {{-- 2. Se NÃO existir (ou seja, se for a Home), mostre a logo --}}
                      @else
                 <div class="card shadow p-3 mb-5 bg-body rounded border-0 p-5 text-center">
                     <h1 class="fw-bold">
