@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+
 use Illuminate\Http\Request;
 use App\Models\Evento;
 use App\Models\Turma;
@@ -25,7 +26,6 @@ class TurmaController extends Controller
         $municipios = $response->successful() ? $response->json() : [];
 
         return view('auth.turmas', compact('eventos', 'municipios', 'turmas'));
-
     }
 
 
@@ -70,21 +70,21 @@ class TurmaController extends Controller
         ]);
 
         $turma = \App\Models\Turma::findOrFail($id);
-                
+
         $turma->update($validatedData);
 
         return redirect()->route('turmas.index')->with('success', 'Turma atualizada com sucesso!');
     }
 
 
-    
+
     public function participantes($id)
-    { 
+    {
         $turma = Turma::with(['evento', 'instrutores', 'alunos'])->findOrFail($id);
 
-        $instrutoresDisponiveis = Pessoa::orderBy('nome_pessoa', 'asc')->get();     
+        $instrutoresDisponiveis = Pessoa::orderBy('nome_pessoa', 'asc')->get();
 
-        return view('auth.participantes', compact('turma', 'instrutoresDisponiveis'));        
+        return view('auth.participantes', compact('turma', 'instrutoresDisponiveis'));
     }
 
 
@@ -173,12 +173,55 @@ class TurmaController extends Controller
     {
         $turma = Turma::findOrFail($id);
 
-            $turma->id_situacao_turma = 2; 
-            $turma->certificado_liberado = 1;
-            $turma->data_liberacao_certificado = now()->format('Y-m-d');
+        $turma->id_situacao_turma = 2;
+        $turma->certificado_liberado = 1;
+        $turma->data_liberacao_certificado = now()->format('Y-m-d');
 
         $turma->save();
 
         return redirect()->back()->with('success', 'Turma fechada e certificados liberados com sucesso!');
+    }
+
+
+
+    public function telaConceitos($id)
+    {
+
+        $turma = Turma::with('alunos')->indOrFail($id);
+
+        return view('auth.lancar_conceitos', compact('turma'));
+    }
+
+
+
+    public function salvarConceitos(Request $request, $id)
+    {
+        $turma = Turma::findOrFail($id);
+
+        $aptos = $request->input('aptos', []);
+
+        foreach ($turma->alunos as $aluno) {
+            $statusConceito = in_array($aluno->id_pessoa, $aptos) ? 'APTO' : 'INAPTO';
+
+            $turma->alunos()->updateExistingPivot($aluno->id_pessoa, [
+                'conceito' => $statusConceito
+            ]);
+        }
+
+        $turma->id_situacao_turma = 3;
+        $turma->save();
+
+        return redirect()->route('turmas.participantes', $id)->with('success', 'Conceitos salvos e enviados para assinatura!');
+    }
+
+
+
+    public function uploadFrequencia(Request $request, $id)
+    {
+        $request->validate([
+            'arquivo_frequencia' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg|max:2048',
+        ]);
+
+        return redirect()->back()->with('success', 'Frequência enviada com sucesso!');
     }
 }

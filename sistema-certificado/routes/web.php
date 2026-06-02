@@ -146,6 +146,15 @@ Route::delete('/turmas/{id}', [\App\Http\Controllers\Auth\TurmaController::class
     ->middleware('auth')
     ->name('turmas.destroy');
 
+Route::get('/turmas/{id}/conceitos', [App\Http\Controllers\Auth\TurmaController::class, 'telaConceitos'])
+    ->name('turmas.conceitos');
+
+Route::post('/turmas/{id}/conceitos/salvar', [App\Http\Controllers\Auth\TurmaController::class, 'salvarConceitos'])
+    ->name('turmas.conceitos.salvar');
+
+Route::post('/turmas/{id}/frequencia', [App\Http\Controllers\Auth\TurmaController::class, 'uploadFrequencia'])
+    ->name('turmas.frequencia');
+
 // --- AUTENTICAÇÃO ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
