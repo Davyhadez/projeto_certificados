@@ -2,35 +2,7 @@
 
 @section('conteudo') {{-- Tudo daqui para baixo vai aparecer no lugar do @yield --}}
 <title>lista de pessoas</title>
-    <style>
-        td:last-child {
-            white-space: nowrap;
-            width: 1%;
-        }
-
-        .table-responsive .table th,
-        .table-responsive .table td {
-            white-space: nowrap;
-            vertical-align: middle;
-        }
-
-
-        .col-acoes {
-            width: 1%;
-        }
-
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: teal !important;
-            box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.25) !important;
-            outline: 0;
-        }
-
-        .pesquisar {
-            cursor: pointer;
-        }
-    </style>
+    
 
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm"
@@ -41,7 +13,7 @@
     </div>
     @endif
 
-    <div class="card shadow-sm border-1 p-3">
+    <div class="card shadow-sm border-1 p-4">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
 
@@ -84,7 +56,7 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered m-0">
+            <table class="table table-striped table-hover table-compacta table-bordered">
                 <thead class="table-light">
                     <tr>
                         <th scope="col">Nome</th>

@@ -32,6 +32,8 @@
             position: fixed;
             left: 0;
             top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
         .sidebar ul {
@@ -51,6 +53,36 @@
         .main-content {
             margin-left: 250px;
             width: calc(100% - 250px);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            /* 1. Transforma a barra lateral em uma barra superior ou a esconde */
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                position: relative; /* Sai do modo fixo para não cobrir o conteúdo */
+                padding-bottom: 10px;
+            }
+
+            /* Ajusta a logo do DETRAN para não ficar gigante no celular */
+            .sidebar .detran {
+                max-width: 120px;
+                margin-top: 15px;
+                margin-bottom: 10px;
+            }
+
+            /* 2. Força o conteúdo principal a ocupar a tela inteira */
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            
+            /* 3. Garante que as tabelas do Bootstrap fiquem roláveis lateralmente se não couberem */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
         }
 
         .top-navbar {
@@ -123,6 +155,7 @@
             padding-left: 0;
             list-style: none;
         }
+
     </style>
 </head>
 
@@ -131,11 +164,10 @@
     <div class="d-flex">
         <div class="sidebar p-3">
 
-            <div class="header-container d-flex align-items-center gap-3 p-3" style="background-color: #0a5c5c;">
-                <img src="https://www.detran.pa.gov.br/assets_news/images/Logodetran_icon.png"
+            <div class="header-container d-flex align-items-center gap-3 p-4" style="background-color: #0a5c5c;">
+                <img src="{{ asset('img/Logodetran_icon.webp') }}"
                      alt="logo DETRAN-PA"
-                     class="img-fluid object-fit-contain"
-                     style="max-width: 120px; height: auto; display: block; margin: 0 auto">
+                     class="img-fluid logo-detran">
             </div>
             <h4 class="text-center mb-3 mt-1 fw-bold">Sistema de Certificados</h4>
 

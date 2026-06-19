@@ -2,7 +2,7 @@
 
 @section('conteudo')
 
-<div class="card shadow-sm border-1 p-3">
+<div class="card shadow-sm border-1 p-4">
     <div class="card shadow-sm border-0 p-1">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -61,7 +61,7 @@
         @endif
 
         <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered align-middle m-0">
+            <table class="table table-striped table-hover table-compacta table-bordered">
                 <thead class="table-light">
                     <tr class="text-uppercase" style="font-size: 0.9rem;">
                         <th scope="col" class="text-center" style="width: 20%;">Evento</th>

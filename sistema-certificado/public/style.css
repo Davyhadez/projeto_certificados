@@ -128,7 +128,7 @@ body.modal-open {
     text-decoration: none;
     line-height: normal;
     transition: background 0.3s;
-    }
+}
 
 .btn-editar {
     display: inline-block;
@@ -140,17 +140,17 @@ body.modal-open {
     cursor: pointer;
     font-weight: bold;
     transition: background 0.3s;
-    }
+}
 
-    .btn-outline-info, .btn-editar {
-        color: #000 !important;
-    }
+.btn-outline-info, .btn-editar {
+    color: #000 !important;
+}
 
-    .btn-editar:hover {
+.btn-editar:hover {
     color: #e0f2f2 !important;
-    }   
+}   
     
-    .btn-deletar {
+.btn-deletar {
     background-color: #ffffff;
     color: black;
     padding: 8px 12px;
@@ -159,9 +159,9 @@ body.modal-open {
     cursor: pointer;
     font-weight: bold;
     transition: background 0.3s;
-    }
+}
 
-    .btn-visualizar-turma {
+.btn-visualizar-turma {
     display: inline-block;
     background-color: #ffffff;
     color: black;
@@ -173,9 +173,9 @@ body.modal-open {
     text-decoration: none;
     line-height: normal;
     transition: background 0.3s;
-    }
+}
 
-    .btn-editar-turma {
+.btn-editar-turma {
     display: inline-block;
     background-color: #ffffff;
     color: black;
@@ -185,9 +185,9 @@ body.modal-open {
     cursor: pointer;
     font-weight: bold;
     transition: background 0.3s;
-    }       
+}       
     
-    .btn-deletar-turma {
+.btn-deletar-turma {
     background-color: #ffffff;
     color: black;
     padding: 5px 5px;
@@ -196,9 +196,9 @@ body.modal-open {
     cursor: pointer;
     font-weight: bold;
     transition: background 0.3s;
-    }
+}
 
-    .btn-emitir {
+.btn-emitir {
     display: inline-block;
     background-color: #ffffff;
     color: black;
@@ -210,20 +210,105 @@ body.modal-open {
     text-decoration: none;
     line-height: normal;
     transition: background 0.3s;
+}
+
+.text-teal {
+    color: teal !important; 
+}
+
+.btn-teal:hover {
+    background-color: #006666 !important; 
+    color: white;
+    transform: translateY(-1px); 
+}
+
+.form-control:focus {
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 128, 128, 0.1);
+    border: 1px solid teal !important;
+}
+
+
+.table-compacta th, 
+.table-compacta td {
+    padding-top: 0.3rem !important;    /* Reduz o espaço superior */
+    padding-bottom: 0.3rem !important; /* Reduz o espaço inferior */
+    padding-left: 0.6rem !important;
+    padding-right: 0.6rem !important;
+    font-size: 0.85rem !important;     /* Diminui levemente o texto */
+    vertical-align: middle !important; /* Mantém tudo alinhado ao centro */
+}
+
+.table-compacta .btn-visualizar,
+.table-compacta .btn-editar,
+.table-compacta .btn-deletar,
+.table-compacta .btn-visualizar-turma,
+.table-compacta .btn-editar-turma,
+.table-compacta .btn-deletar-turma,
+.table-compacta .btn-emitir {
+    padding: 4px 8px !important;   
+    font-size: 0.78rem !important;     
+}
+
+.table-compacta .badge,
+.table-compacta [class*="badge-"] {
+    font-size: 0.72rem !important;
+    padding: 3px 6px !important;
+}
+
+@media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column !important;
     }
 
-    .text-teal {
-        color: teal !important; 
+    .sidebar {
+        width: 100% !important;
+        min-height: auto !important;
+        position: relative !important;
+        padding: 12px !important;
     }
 
-    .btn-teal:hover {
-        background-color: #006666 !important; 
-        color: white;
-        transform: translateY(-1px); 
+    .logo-detran {
+        max-width: 80px !important;
+    }
+    
+    .sidebar h4 {
+        font-size: 1.15rem !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .sidebar hr {
+        margin: 6px 0 !important;
     }
 
-    .form-control:focus {
-        background-color: #fff !important;
-        box-shadow: 0 0 0 0.25rem rgba(0, 128, 128, 0.1);
-        border: 1px solid teal !important;
+    .sidebar ul {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 6px !important;
     }
+
+    .sidebar .nav-item {
+        flex: 1 1 auto;
+        min-width: 95px;
+    }
+    
+    .nav-btn, .nav-sair-btn {
+        font-size: 13px !important;
+        padding: 6px !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .container-fluid.p-5 {
+        padding: 12px !important;
+    }
+    
+    .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+}

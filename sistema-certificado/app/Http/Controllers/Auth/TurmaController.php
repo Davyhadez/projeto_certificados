@@ -187,9 +187,9 @@ class TurmaController extends Controller
     public function telaConceitos($id)
     {
 
-        $turma = Turma::with('alunos')->indOrFail($id);
+        $turma = Turma::with('alunos')->findOrFail($id);
 
-        return view('auth.lancar_conceitos', compact('turma'));
+        return view('auth.lancar_conceito', compact('turma'));
     }
 
 
@@ -223,5 +223,26 @@ class TurmaController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Frequência enviada com sucesso!');
+    }
+
+
+    public function salvarAptidao(Request $request, $id_turma)
+    {
+        $turma = Turma::findOrFail($id_turma);
+
+        $dadosAlunos = $request->input('alunos', []);
+
+        $alunosMatriculados = $turma->alunos; 
+
+        foreach ($alunosMatriculados as $aluno) {
+
+            $novoConceito = isset($dadosAlunos[$aluno->id_pessoa]['apto']) ? 'Apto' : 'Inapto';
+
+            $turma->alunos()->updateExistingPivot($aluno->id_pessoa, [
+                'conceito' => $novoConceito
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Conceitos lançadosata com sucesso!');
     }
 }

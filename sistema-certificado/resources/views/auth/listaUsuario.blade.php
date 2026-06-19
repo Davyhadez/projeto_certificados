@@ -26,7 +26,7 @@
     </div>
 @endif
 
-<div class="card shadow-sm border-1 p-3">
+<div class="card shadow-sm border-1 p-4">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
 
@@ -71,7 +71,7 @@
 
     <div class="table-responsive">
 
-        <table class="table table-striped table-hover table-bordered m-0">
+        <table class="table table-striped table-hover table-compacta table-bordered">
 
             <thead class="table-light">
 
