@@ -9,3 +9,19 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Regras Globais de Acessibilidade */
+@layer base {
+    /* Garante que qualquer elemento em foco tenha um contorno extremamente visível */
+    *:focus-visible {
+        outline: 3px solid #0f766e !important; /* teal-700 */
+        outline-offset: 2px !important;
+        box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.4) !important; /* teal-500 com opacidade */
+    }
+
+    /* Remove sublinhados indesejados de botões antigos para consistência visual */
+    .btn-teal, .btn-teal-voltar, .btn-green-salvar, .btn-red-limpar {
+        text-decoration: none !important;
+    }
+}
+

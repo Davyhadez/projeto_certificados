@@ -180,7 +180,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title fw-bold" style="color: teal;">Editar Dados do Usuário</h5>
+                <h5 class="modal-title fw-bold" style="color: dark;">Editar Dados do Usuário</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('usuarios.update', '$u->id_usuario') }}" method="POST" id="formEditarPessoa" autocomplete="off">
@@ -205,7 +205,7 @@
                             <button type="button"
                                     onclick="togglePassword()"
                                     class="btn border-0 position-absolute end-0 top-50 translate-middle-y"
-                                    style="color: teal; background: transparent; z-index: 10;">
+                                    style="color: dark; background: transparent; z-index: 10;">
                                     <i class="bi bi-eye-fill" id="icon-senha"></i>
                             </button>
                         </div>

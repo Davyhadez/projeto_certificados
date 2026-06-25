@@ -190,7 +190,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-teal" style="background-color: teal; color: white;">Atualizar Evento</button>
+                    <button type="submit" class="btn btn-success">Atualizar Evento</button>
                 </div>
             </form>
         </div>

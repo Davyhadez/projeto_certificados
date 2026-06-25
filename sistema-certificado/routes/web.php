@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\UsuarioController;
 use App\Http\Controllers\Auth\EventoController;
 use App\Http\Controllers\Auth\DisciplinaController;
 use App\Http\Controllers\Auth\TurmaController;
+use App\Http\Controllers\Auth\AssinaturaController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -234,6 +235,32 @@ Route::delete('/turmas/{id_turma}/removerAluno/{id_pessoa}', [TurmaController::c
 Route::delete('/turmas/{id}', [\App\Http\Controllers\Auth\TurmaController::class, 'destroy'])
     ->middleware('auth')
     ->name('turmas.destroy');
+
+
+
+// --- ROTAS DEASSINATURAS ---
+// --- GET ---
+Route::get('/assinaturas', [AssinaturaController::class, 'index'])
+    ->middleware('auth')
+    ->name('assinaturas.index');
+
+
+
+// --- POST ---
+Route::post('/assinaturas', [AssinaturaController::class, 'store'])
+    ->name('assinaturas.store');
+
+
+
+// --- PUT ---
+Route::put('/assinaturas/{id}', [AssinaturaController::class, 'update'])
+    ->name('assinaturas.update');
+
+
+
+// --- DELETE ---
+Route::delete('/assinaturas/{id}', [AssinaturaController::class, 'destroy'])
+    ->name('assinaturas.destroy');
 
 
 

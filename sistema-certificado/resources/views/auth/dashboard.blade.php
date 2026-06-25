@@ -83,6 +83,12 @@
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
             }
+
+            /* Estilo específico para a header-container em celulares */
+            .header-container {
+                padding: 10px !important;            /* Diminui o espaçamento interno no celular */
+                justify-content: center !important;  /* Centraliza o conteúdo no celular */
+            }
         }
 
         .top-navbar {
@@ -177,7 +183,7 @@
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('dashboard') }}" 
-                        class="nav-btn rounded d-block text-white text-decoration-none p-2 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        class="nav-btn rounded d-block text-white text-decoration-none p-1 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                             <i class="bi bi-house-door"></i> Dashboard
                         </a>
                     </div>
@@ -186,7 +192,7 @@
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('usuarios.index') }}" 
-                        class="nav-btn rounded d-block text-white text-decoration-none p-2 {{ request()->routeIs('usuarios.index') ? 'active' : '' }}">
+                        class="nav-btn rounded d-block text-white text-decoration-none p-1 {{ request()->routeIs('usuarios.index') ? 'active' : '' }}">
                             <i class="bi bi-person"></i> Usuários
                         </a>
                     </div>
@@ -195,7 +201,7 @@
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('pessoas.index') }}" 
-                        class="nav-btn rounded d-block text-white text-decoration-none p-2 {{ request()->routeIs('pessoas.index') ? 'active' : '' }}">
+                        class="nav-btn rounded d-block text-white text-decoration-none p-1 {{ request()->routeIs('pessoas.index') ? 'active' : '' }}">
                             <i class="bi bi-people"></i> Pessoas
                         </a>
                     </div>
@@ -204,7 +210,7 @@
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('eventos.index') }}" 
-                        class="nav-btn rounded d-block text-white text-decoration-none p-2 {{ request()->routeIs('eventos.index') ? 'active' : '' }}">
+                        class="nav-btn rounded d-block text-white text-decoration-none p-1 {{ request()->routeIs('eventos.index') ? 'active' : '' }}">
                             <i class="bi bi-calendar-event"></i> Eventos
                         </a>
                     </div>
@@ -213,8 +219,17 @@
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('turmas.index') }}" 
-                        class="nav-btn rounded d-block text-white text-decoration-none p-2 {{ request()->routeIs('turmas.index') ? 'active' : '' }}">
+                        class="nav-btn rounded d-block text-white text-decoration-none p-1 {{ request()->routeIs('turmas.index') ? 'active' : '' }}">
                             <i class="bi bi-mortarboard"></i> Turmas
+                        </a>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="rounded p-1">
+                        <a href="{{ route('assinaturas.index') }}" 
+                        class="nav-btn rounded d-block text-white text-decoration-none p-1 {{ request()->routeIs('assinatura.index') ? 'active' : '' }}">
+                            <i class="bi bi-file-earmark-text"></i> Assinaturas
                         </a>
                     </div>
                 </li>
@@ -223,7 +238,7 @@
                     <div class="rounded p-1">
                         <form action="{{ route('logout') }}" method="POST" class="d-inline">
                             @csrf
-                            <button type="button" class="nav-sair-btn rounded d-block text-white text-decoration-none p-2"
+                            <button type="button" class="nav-sair-btn rounded d-block text-white text-decoration-none p-1"
                                     style="width: 100%; border: none;"
                                     data-bs-toggle="modal"
                                     data-bs-target="#logoutModal">
@@ -245,7 +260,8 @@
                 
                 <div class="d-flex align-items-center">
                     <span class="me-3 fw-bold text-uppercase">
-                        {{ Auth::user()->login_usuario ?? 'Visitante' }} <i class="bi bi-person-circle"></i>
+                        <i class="bi bi-person-circle"></i>
+                        {{ Auth::user()->login_usuario ?? 'Visitante' }}
                     </span>
                 </div>
             </nav>

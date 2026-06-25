@@ -2,7 +2,7 @@
 
 {{-- SEÇÃO DO BOTÃO VOLTAR --}}
 @section('voltarPessoas')
-<a href="{{route('turmas.participantes', $turma->id_turma)}}" class="btn-teal-voltar">
+<a href="{{route('turmas.index', $turma->id_turma)}}" class="btn-teal-voltar">
     <i class="bi bi-arrow-left"></i> Voltar
 </a>
 @endsection

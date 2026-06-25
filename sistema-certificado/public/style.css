@@ -263,7 +263,7 @@ body.modal-open {
 
     .sidebar {
         width: 100% !important;
-        min-height: auto !important;
+        min-height: 100% !important;
         position: relative !important;
         padding: 12px !important;
     }

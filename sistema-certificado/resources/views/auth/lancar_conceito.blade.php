@@ -1,11 +1,14 @@
 @extends('auth.dashboard') 
 
-@section('conteudo')
-<div>
-    <a href="{{ route('turmas.participantes', $turma->id_turma) }}" class="btn-teal-voltar">
+@section('voltarPessoas')
+    <a href="{{ route('turmas.participantes', $turma->id_turma) }}"
+        class="btn-teal-voltar">
         <i class="bi bi-arrow-left"></i> Voltar
     </a>
-</div>
+@endsection
+
+@section('conteudo')
+
 <form action="{{ route('turmas.salvar-aptidao', $turma->id_turma) }}" method="POST">
     @csrf
 

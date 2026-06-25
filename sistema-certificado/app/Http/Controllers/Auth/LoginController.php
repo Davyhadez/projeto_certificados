@@ -27,7 +27,7 @@ class LoginController extends Controller
             -> 
             first();
 
-        if ($user && md5($request -> password) === $user -> senha_usuario) { #tranforma em formato MD5 para comparar com o banco de dados
+        if ($user && md5($request -> password) === $user -> senha_usuario) { 
             
             if ($user -> ativo != 1) {
                 return back() -> withErrors([
