@@ -1,3 +1,11 @@
+
+
+
+
+
+
+
+
 @extends('auth.dashboard')
 
 {{-- SEÇÃO DO BOTÃO VOLTAR --}}
@@ -36,7 +44,7 @@
             <br>
 
             {{-- STATUS 1: BOTÃO: FECHAR TURMA --}}
-            @if($turma->id_situacao_turma == 1)
+            @if((int)$turma->id_situacao_turma === 1)
             <div class="mb-4">
                 <form action="{{ route('turmas.fechar', $turma->id_turma ?? $turma->id) }}" method="POST">
                     @csrf
@@ -47,8 +55,8 @@
             </div>
             @endif       
             
-            {{-- STATUS 4 OU 2: FUNCIONALIDADES DE LANÇAMENTO --}}
-            @if($turma->id_situacao_turma == 4 || $turma->id_situacao_turma == 2)
+            {{-- STATUS 4: FUNCIONALIDADES DE LANÇAMENTO --}}
+            @if((int)$turma->id_situacao_turma === 4)
             <div class="alert alert-info mt-3" style="background-color: #e3f2fd; color: #0d47a1; border-left: 5px solid #0d47a1; padding: 15px; border-radius: 4px;">
                 <strong>Turma fechada!</strong> Agora você pode lançar os conceitos dos alunos.
             </div>
@@ -67,10 +75,17 @@
             </div>
             @endif    
             
-            {{-- STATUS 3: AVISO: CERTIFICADO PENDENTE --}}
-            @if($turma->id_situacao_turma == 3)
+            {{-- STATUS 3: AVISO: AGUARDANDO ASSINATURA --}}
+            @if((int)$turma->id_situacao_turma === 3 && $turma->certificado_liberado != 1)
             <div class="alert alert-warning mt-3" style="background-color: #fffde7; color: #f57f17; border-left: 5px solid #f57f17; padding: 15px; border-radius: 4px;">
-                <strong>Certificados em processo de assinatura.</strong> Aguarde a conclusão da assinatura em outro sistema. Os certificados serão liberados automaticamente.
+                <strong>Certificados em processo de assinatura.</strong> Aguarde a conclusão da assinatura pelo coordenador. Os certificados serão liberados automaticamente.
+            </div>
+            @endif
+
+            {{-- STATUS LIBERADO: AVISO: CERTIFICADOS PRONTOS --}}
+            @if((int)$turma->id_situacao_turma === 2 || $turma->certificado_liberado == 1)
+            <div class="alert alert-success mt-3" style="background-color: #d1e7dd; color: #0f5132; border-left: 5px solid #0f5132; padding: 15px; border-radius: 4px;">
+                <strong><i class="bi bi-check-circle-fill me-1"></i>Certificados liberados!</strong> As assinaturas foram concluídas e os certificados estão disponíveis para emissão.
             </div>
             @endif
 
@@ -114,18 +129,26 @@
                             <td class="ps-4">{{ $instrutor->nome_pessoa }}</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    @if($turma->id_situacao_turma == 2)
+                                    @if($turma->certificado_liberado == 1)
+                                    {{-- Certificado liberado: botão de emissão ativo --}}
                                     <button class="btn btn-outline-success btn-sm px-3">
-                                        Emitir Certificado
+                                        <i class="bi bi-file-earmark-check me-1"></i>Emitir Certificado
+                                    </button>
+                                    @else
+                                    {{-- Certificado não liberado: botão de exclusão ou pendente --}}
+                                    @if($turma->id_situacao_turma >= 3)
+                                    <button class="btn btn-outline-secondary btn-sm px-3" disabled title="Aguardando liberação da assinatura.">
+                                        <i class="bi bi-hourglass-split me-1"></i>Certificado Pendente
                                     </button>
                                     @else
                                     <form action="{{ route('turmas.removerInstrutor', [$turma->id_turma ?? $turma->id, $instrutor->id_pessoa]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm px-2" title="Remover Instrutor" onclick="return confirm('Remover este instrutor da turma?')">
-                                            <i class="bi bi-person-dash"> Excluir Instrutor</i>
+                                            <i class="bi bi-person-dash"></i> Excluir Instrutor
                                         </button>
                                     </form>
+                                    @endif
                                     @endif
                                 </div>
                             </td>
@@ -172,21 +195,29 @@
                             <td class="text-center">{{ $aluno->pivot->conceito ?? '---' }}</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    @if($turma->id_situacao_turma == 2)
+                                    @if($turma->certificado_liberado == 1)
+                                    {{-- Certificado liberado: botão de emissão ativo --}}
                                     <button class="btn btn-outline-success btn-sm px-3">
-                                        Emitir Certificado
+                                        <i class="bi bi-file-earmark-check me-1"></i>Emitir Certificado
                                     </button>
-                                    <button class="btn btn-outline-success btn-sm px-3">
-                                        Baixar Frequência da Turma
+                                    <button class="btn btn-outline-primary btn-sm px-3">
+                                        <i class="bi bi-download me-1"></i>Baixar Frequência da Turma
+                                    </button>
+                                    @else
+                                    {{-- Certificado não liberado: botão de exclusão ou pendente --}}
+                                    @if($turma->id_situacao_turma >= 3)
+                                    <button class="btn btn-outline-secondary btn-sm px-3" disabled title="Aguardando liberação da assinatura.">
+                                        <i class="bi bi-hourglass-split me-1"></i>Certificado Pendente
                                     </button>
                                     @else
                                     <form action="{{ route('turmas.removerAluno', [$turma->id_turma ?? $turma->id, $aluno->id_pessoa]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm px-2" title="Remover Aluno" onclick="return confirm('Remover este aluno da turma?')">
-                                            <i class="bi bi-person-dash"> Excluir Aluno</i>
+                                            <i class="bi bi-person-dash"></i> Excluir Aluno
                                         </button>
                                     </form>
+                                    @endif
                                     @endif
                                 </div>
                             </td>

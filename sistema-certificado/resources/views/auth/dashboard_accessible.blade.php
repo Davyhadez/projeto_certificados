@@ -60,6 +60,7 @@
 
             <!-- Navegação Principal -->
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto" aria-label="Navegação Lateral">
+                {{-- Dashboard: visível para todos --}}
                 <a href="{{ route('dashboard') }}" 
                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition duration-150 group {{ request()->routeIs('dashboard') ? 'bg-teal-800 text-white shadow' : 'text-teal-100 hover:bg-teal-800/50 hover:text-white' }} focus:outline-none focus:ring-2 focus:ring-teal-400"
                    aria-current="{{ request()->routeIs('dashboard') ? 'page' : 'false' }}">
@@ -67,40 +68,55 @@
                     <span>Início / Painel</span>
                 </a>
 
+                {{-- Usuários: Administrador (1) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
                 <a href="{{ route('usuarios.index') }}" 
                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition duration-150 group {{ request()->routeIs('usuarios.index') ? 'bg-teal-800 text-white shadow' : 'text-teal-100 hover:bg-teal-800/50 hover:text-white' }} focus:outline-none focus:ring-2 focus:ring-teal-400"
                    aria-current="{{ request()->routeIs('usuarios.index') ? 'page' : 'false' }}">
                     <i class="bi bi-person text-lg" aria-hidden="true"></i>
                     <span>Usuários</span>
                 </a>
+                @endif
 
+                {{-- Pessoas: Administrador (1) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
                 <a href="{{ route('pessoas.index') }}" 
                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition duration-150 group {{ request()->routeIs('pessoas.index') ? 'bg-teal-800 text-white shadow' : 'text-teal-100 hover:bg-teal-800/50 hover:text-white' }} focus:outline-none focus:ring-2 focus:ring-teal-400"
                    aria-current="{{ request()->routeIs('pessoas.index') ? 'page' : 'false' }}">
                     <i class="bi bi-people text-lg" aria-hidden="true"></i>
                     <span>Pessoas</span>
                 </a>
+                @endif
 
+                {{-- Eventos: Administrador (1) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
                 <a href="{{ route('eventos.index') }}" 
                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition duration-150 group {{ request()->routeIs('eventos.index') ? 'bg-teal-800 text-white shadow' : 'text-teal-100 hover:bg-teal-800/50 hover:text-white' }} focus:outline-none focus:ring-2 focus:ring-teal-400"
                    aria-current="{{ request()->routeIs('eventos.index') ? 'page' : 'false' }}">
                     <i class="bi bi-calendar-event text-lg" aria-hidden="true"></i>
                     <span>Eventos</span>
                 </a>
+                @endif
 
+                {{-- Turmas: Administrador (1) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
                 <a href="{{ route('turmas.index') }}" 
                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition duration-150 group {{ request()->routeIs('turmas.index') ? 'bg-teal-800 text-white shadow' : 'text-teal-100 hover:bg-teal-800/50 hover:text-white' }} focus:outline-none focus:ring-2 focus:ring-teal-400"
                    aria-current="{{ request()->routeIs('turmas.index') ? 'page' : 'false' }}">
                     <i class="bi bi-mortarboard text-lg" aria-hidden="true"></i>
                     <span>Turmas</span>
                 </a>
+                @endif
 
-                <a href="{{ route('assinatura.index') }}" 
-                   class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition duration-150 group {{ request()->routeIs('assinatura.index') ? 'bg-teal-800 text-white shadow' : 'text-teal-100 hover:bg-teal-800/50 hover:text-white' }} focus:outline-none focus:ring-2 focus:ring-teal-400"
-                   aria-current="{{ request()->routeIs('assinatura.index') ? 'page' : 'false' }}">
+                {{-- Assinaturas: Gabinete (3) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [2, 3]))
+                <a href="{{ route('assinaturas.index') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition duration-150 group {{ request()->routeIs('assinaturas.index') ? 'bg-teal-800 text-white shadow' : 'text-teal-100 hover:bg-teal-800/50 hover:text-white' }} focus:outline-none focus:ring-2 focus:ring-teal-400"
+                   aria-current="{{ request()->routeIs('assinaturas.index') ? 'page' : 'false' }}">
                     <i class="bi bi-file-earmark-text text-lg" aria-hidden="true"></i>
                     <span>Assinaturas</span>
                 </a>
+                @endif
             </nav>
 
             <!-- Rodapé da Sidebar (Logout) -->
@@ -173,10 +189,10 @@
     </div>
 
     <!-- 📱 BARRA DE NAVEGAÇÃO INFERIOR PARA DISPOSITIVOS MOBILE (Altamente Recomendável para Iniciantes/Idosos) -->
-    <!-- Todos os botões contam com áreas ampliadas de toque (min 48x48px) e rótulos claros -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-slate-200 shadow-xl flex justify-around items-center px-2 z-30" 
          aria-label="Navegação Rápida de Dispositivos Móveis">
         
+        {{-- Dashboard: sempre visível --}}
         <a href="{{ route('dashboard') }}" 
            class="flex flex-col items-center justify-center w-12 h-12 rounded-lg text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 {{ request()->routeIs('dashboard') ? 'text-teal-700 font-bold' : '' }}"
            aria-label="Ir para tela inicial">
@@ -184,26 +200,45 @@
             <span class="text-[10px] tracking-tight">Início</span>
         </a>
 
+        {{-- Pessoas: Administrador (1) e Treinamento (2) --}}
+        @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
         <a href="{{ route('pessoas.index') }}" 
            class="flex flex-col items-center justify-center w-12 h-12 rounded-lg text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 {{ request()->routeIs('pessoas.index') ? 'text-teal-700 font-bold' : '' }}"
            aria-label="Listagem de Pessoas cadastradas">
             <i class="bi bi-people text-xl" aria-hidden="true"></i>
             <span class="text-[10px] tracking-tight">Pessoas</span>
         </a>
+        @endif
 
+        {{-- Eventos: Administrador (1) e Treinamento (2) --}}
+        @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
         <a href="{{ route('eventos.index') }}" 
            class="flex flex-col items-center justify-center w-12 h-12 rounded-lg text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 {{ request()->routeIs('eventos.index') ? 'text-teal-700 font-bold' : '' }}"
            aria-label="Visualizar Eventos">
             <i class="bi bi-calendar-event text-xl" aria-hidden="true"></i>
             <span class="text-[10px] tracking-tight">Eventos</span>
         </a>
+        @endif
 
+        {{-- Turmas: Administrador (1) e Treinamento (2) --}}
+        @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
         <a href="{{ route('turmas.index') }}" 
            class="flex flex-col items-center justify-center w-12 h-12 rounded-lg text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 {{ request()->routeIs('turmas.index') ? 'text-teal-700 font-bold' : '' }}"
            aria-label="Ver Turmas cadastradas">
             <i class="bi bi-mortarboard text-xl" aria-hidden="true"></i>
             <span class="text-[10px] tracking-tight">Turmas</span>
         </a>
+        @endif
+
+        {{-- Assinaturas no mobile: Gabinete (3) e Treinamento (2) --}}
+        @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [2, 3]))
+        <a href="{{ route('assinaturas.index') }}" 
+           class="flex flex-col items-center justify-center w-12 h-12 rounded-lg text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 {{ request()->routeIs('assinaturas.index') ? 'text-teal-700 font-bold' : '' }}"
+           aria-label="Assinaturas">
+            <i class="bi bi-file-earmark-text text-xl" aria-hidden="true"></i>
+            <span class="text-[10px] tracking-tight">Assinaturas</span>
+        </a>
+        @endif
 
         <!-- Botão "Mais" - Abre opções secundárias com facilidade (Evita poluir o rodapé do celular) -->
         <button type="button" 
@@ -244,11 +279,23 @@
 
             <!-- Links Secundários Mobile com tamanhos de toque generosos (mínimo 48px) -->
             <div class="space-y-3 mb-6">
+                {{-- Usuários no drawer: Administrador (1) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
                 <a href="{{ route('usuarios.index') }}" 
                    class="flex items-center gap-3 w-full p-4 rounded-xl text-slate-700 bg-slate-50 hover:bg-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 min-h-[48px]">
                     <i class="bi bi-person text-xl text-teal-700" aria-hidden="true"></i>
                     <span>Gerenciar Usuários</span>
                 </a>
+                @endif
+
+                {{-- Assinaturas no drawer: Gabinete (3) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [2, 3]))
+                <a href="{{ route('assinaturas.index') }}" 
+                   class="flex items-center gap-3 w-full p-4 rounded-xl text-slate-700 bg-slate-50 hover:bg-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500 min-h-[48px]">
+                    <i class="bi bi-file-earmark-text text-xl text-teal-700" aria-hidden="true"></i>
+                    <span>Assinaturas</span>
+                </a>
+                @endif
                 
                 <hr class="border-slate-100">
 

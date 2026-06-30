@@ -180,6 +180,7 @@
             <hr style="border-top: 3px solid rgb(255, 255, 255);">
 
             <ul>
+                {{-- Dashboard: visível para todos --}}
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('dashboard') }}" 
@@ -189,6 +190,8 @@
                     </div>
                 </li>
 
+                {{-- Usuários: Administrador (1) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('usuarios.index') }}" 
@@ -197,7 +200,10 @@
                         </a>
                     </div>
                 </li>
+                @endif
 
+                {{-- Pessoas: Administrador (1) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('pessoas.index') }}" 
@@ -206,7 +212,10 @@
                         </a>
                     </div>
                 </li>
+                @endif
 
+                {{-- Eventos: Administrador (1) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('eventos.index') }}" 
@@ -215,7 +224,10 @@
                         </a>
                     </div>
                 </li>
+                @endif
 
+                {{-- Turmas: Administrador (1) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [1, 2]))
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('turmas.index') }}" 
@@ -224,15 +236,19 @@
                         </a>
                     </div>
                 </li>
+                @endif
 
+                {{-- Assinaturas: Gabinete (3) e Treinamento (2) --}}
+                @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [2, 3]))
                 <li class="nav-item">
                     <div class="rounded p-1">
                         <a href="{{ route('assinaturas.index') }}" 
-                        class="nav-btn rounded d-block text-white text-decoration-none p-1 {{ request()->routeIs('assinatura.index') ? 'active' : '' }}">
+                        class="nav-btn rounded d-block text-white text-decoration-none p-1 {{ request()->routeIs('assinaturas.index') ? 'active' : '' }}">
                             <i class="bi bi-file-earmark-text"></i> Assinaturas
                         </a>
                     </div>
                 </li>
+                @endif
 
                 <li class="nav-item">
                     <div class="rounded p-1">

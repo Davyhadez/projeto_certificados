@@ -81,10 +81,16 @@
                             <tr>
                                 <td class="none">{{ $turma->evento->nome_evento ?? 'Evento não encontrado' }}</td>
                                 <td class="text-center">
-                                    @if($turma->certificado_liberado == 1)
+                                    @if((int)$turma->id_situacao_turma === 1)
+                                        <span class="badge bg-warning text-dark text-uppercase" style="font-size: 0.8rem; padding: 5px 10px;">Aberta</span>
+                                    @elseif((int)$turma->id_situacao_turma === 2)
                                         <span class="badge bg-success text-uppercase" style="font-size: 0.8rem; padding: 5px 10px;">Liberado</span>
+                                    @elseif((int)$turma->id_situacao_turma === 3)
+                                        <span class="badge text-uppercase" style="font-size: 0.8rem; padding: 5px 10px; background-color: #fd7e14; color: white;">Pendente</span>
+                                    @elseif((int)$turma->id_situacao_turma === 4)
+                                        <span class="badge bg-secondary text-uppercase" style="font-size: 0.8rem; padding: 5px 10px;">Fechada</span>
                                     @else
-                                        <span class="badge bg-warning text-uppercase" style="font-size: 0.8rem; padding: 5px 10px;">Pendente</span>
+                                        <span class="badge bg-dark text-uppercase" style="font-size: 0.8rem; padding: 5px 10px;">N/A</span>
                                     @endif
                                 </td>
                                 <td class="text-center">{{ $turma->local_oferta }}</td>

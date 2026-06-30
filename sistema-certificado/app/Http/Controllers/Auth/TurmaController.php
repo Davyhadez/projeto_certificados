@@ -173,13 +173,11 @@ class TurmaController extends Controller
     {
         $turma = Turma::findOrFail($id);
 
-        $turma->id_situacao_turma = 2;
-        $turma->certificado_liberado = 1;
-        $turma->data_liberacao_certificado = now()->format('Y-m-d');
+        $turma->id_situacao_turma = 4;
 
         $turma->save();
 
-        return redirect()->back()->with('success', 'Turma fechada e certificados liberados com sucesso!');
+        return redirect()->back()->with('success', 'Turma fechada com sucesso! Lance os conceitos.');
     }
 
 
@@ -208,10 +206,10 @@ class TurmaController extends Controller
             ]);
         }
 
-        $turma->id_situacao_turma = 3;
+        $turma->id_situacao_turma = 4;
         $turma->save();
 
-        return redirect()->route('turmas.participantes', $id)->with('success', 'Conceitos salvos e enviados para assinatura!');
+        return redirect()->route('turmas.participantes', $id)->with('success', 'Conceitos salvos com sucesso!');
     }
 
 
