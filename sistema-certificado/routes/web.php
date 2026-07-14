@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\EventoController;
 use App\Http\Controllers\Auth\DisciplinaController;
 use App\Http\Controllers\Auth\TurmaController;
 use App\Http\Controllers\Auth\AssinaturaController;
+use App\Http\Controllers\Auth\CertificadoController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -238,7 +239,7 @@ Route::delete('/turmas/{id}', [\App\Http\Controllers\Auth\TurmaController::class
 
 
 
-// --- ROTAS DEASSINATURAS ---
+// --- ROTAS DE ASSINATURAS ---
 // --- GET ---
 Route::get('/assinaturas', [AssinaturaController::class, 'index'])
     ->middleware('auth')
@@ -263,6 +264,11 @@ Route::delete('/assinaturas/{id}', [AssinaturaController::class, 'destroy'])
     ->name('assinaturas.destroy');
 
 
+
+// --- MODELO CERTIFICADO ---
+Route::get('/certificado/emitir/{id}', [CertificadoController::class, 'emitirCertificado'])
+    ->middleware('auth')
+    ->name('certificado.emitir');
 
 // --- AUTENTICAÇÃO ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
