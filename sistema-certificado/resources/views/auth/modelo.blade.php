@@ -16,7 +16,6 @@
         }
         
         body {
-            font-family: 'Arial', 'Helvetica', sans-serif;
             color: #000000;
             background-color: #ffffff;
             line-height: 1.5;
@@ -47,22 +46,25 @@
         }
         .titulo {
             font-size: 36pt;
-            font-weight: bold;
+            font-weight: 800;
             letter-spacing: 1px;
-            margin-bottom: 5mm;
+            margin-bottom: 3mm;
+            font-family: times, Times New Roman, serif;
         }
         .nome-aluno {
             font-size: 22pt;
             font-weight: bold;
             text-transform: uppercase;
-            margin-bottom: 8mm;
+            margin-bottom: 3mm;
+            font-family: Arial, sans-serif;
         }
         .texto-principal {
-            font-size: 17pt;
+            font-size: 18pt;
             line-height: 1.8;
             text-align: center; 
             color: #222222;
             margin-bottom: 15mm;
+            font-family: Arial, sans-serif;
         }
         .destaque {
             font-weight: bold;
@@ -75,11 +77,13 @@
         }
         .data-emissao {
             font-size: 19pt;
-            margin-bottom: 75mm;
+            margin-bottom: 60mm;
+            font-family: Arial, sans-serif;
         }
         .assinatura-container {
             display: inline-block;
             text-align: center;
+            font-family: Arial, sans-serif;
         }
         .linha-assinatura {
             width: 250px;
@@ -87,7 +91,7 @@
             margin: 4px auto;
         }
         .cargo {
-            font-size: 10pt;
+            font-size: 11pt;
             color: #333333;
         }
 
@@ -95,20 +99,27 @@
             page-break-after: always;
         }
         .container-verso {
+            position: relative;
             width: 100%;
-            padding: 10mm 10mm; 
             text-align: center;
+            min-height: 145mm;
+            padding-top: 10mm;
+            padding-bottom: 20mm; 
         }
         .titulo-verso {
-            font-size: 22pt;
+            font-size: 26pt;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 12mm;
+            margin-top: 0;
+            margin-bottom: 5mm;
+            font-family: Arial, sans-serif;
         }
         .table-grade {
             width: 85%; 
             margin: 0 auto; 
             border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            page-break-inside: auto;
         }
         .table-grade th, .table-grade td {
             border: 1px solid #000000;
@@ -120,15 +131,23 @@
             font-weight: bold;
             text-transform: uppercase;
         }
+        .table-grade tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
         .total-row {
             font-weight: bold;
+            page-break-inside: avoid;
         }
         .rodape-autenticacao {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
             text-align: center;
-            font-size: 10pt;
+            font-size: 12pt;
             color: #444444;
-            width: 100%;
-            margin-top: 30mm;
+            font-family: Arial, sans-serif;
         }
     </style>
 </head>
@@ -145,7 +164,7 @@
         <div class="titulo">CERTIFICADO</div>
         <div class="nome-aluno">{{ $dados['nome_completo'] }}</div>
         <p class="texto-principal">
-            Participou como instruído do curso de <span class="destaque">{{ $dados['curso'] }}</span>, realizado <br> pelo Departamento de Trânsito do Estado do Pará (DETRAN/PA), no município de <br> <span class="destaque">{{ $dados['municipio'] }}</span>, no período de <span class="destaque">{{ $dados['data_inicio'] }}</span> a <span class="destaque">{{ $dados['data_fim'] }}</span>, com carga horária de <span class="destaque">{{ $dados['carga_horaria'] }} horas/aulas</span>.
+            Participou como <span class="destaque">{{ $dados['tipo_participacao'] }}</span> do curso de <span class="destaque">{{ $dados['curso'] }}</span>, realizado <br> pelo Departamento de Trânsito do Estado do Pará (DETRAN/PA), no município de <br> <span class="destaque">{{ $dados['municipio'] }}</span>, no período de <span class="destaque">{{ $dados['data_inicio'] }}</span> a <span class="destaque">{{ $dados['data_fim'] }}</span>, com carga horária de <span class="destaque">{{ $dados['carga_horaria'] }} horas/aulas</span>.
         </p>
     </div>
 
@@ -172,16 +191,29 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="destaque">aula01</td>
-                    <td>aula de fundamentos básicos no trânsito</td>
-                    <td>{{ $dados['carga_horaria'] }} h/a</td>
-                </tr>
-                <tr class="total-row">
-                    <td>Total</td>
-                    <td>-</td>
-                    <td>{{ $dados['carga_horaria'] }} h/a</td>
-                </tr>
+                @if(isset($dados['disciplinas']) && count($dados['disciplinas']) > 0)
+                    @foreach($dados['disciplinas'] as $disciplina)
+                    <tr>
+                        <td class="destaque">{{ $disciplina->nome_disciplina }}</td>
+                        <td>{{ $disciplina->conteudo ?? '-' }}</td>
+                        <td>{{ $disciplina->carga_horaria }} h/a</td>
+                    </tr>
+                    @endforeach
+                    <tr class="total-row">
+                        <td>Total</td>
+                        <td>-</td>
+                        <td>{{ $dados['carga_horaria'] }} h/a</td>
+                    </tr>
+                @else
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: #666;">Sem disciplinas cadastradas</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td>Total</td>
+                        <td>-</td>
+                        <td>{{ $dados['carga_horaria'] }} h/a</td>
+                    </tr>
+                @endif
             </tbody>
         </table>
 

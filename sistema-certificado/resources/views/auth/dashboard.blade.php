@@ -238,7 +238,7 @@
                 </li>
                 @endif
 
-                {{-- Assinaturas: Gabinete (3) e Treinamento (2) --}}
+                {{-- Assinaturas: Treinamento (2) e Gabinete (3) --}}
                 @if(Auth::check() && in_array((int)Auth::user()->id_tipo_usuario, [2, 3]))
                 <li class="nav-item">
                     <div class="rounded p-1">

@@ -19,7 +19,7 @@
 @section('conteudo') 
 
 <div class="container my-5">
-    <div class="card shadow-sm border border-light-subtle rounded p-4 bg-white" style="max-width: 1200px; margin: 0 auto;">
+    <div class="card shadow-sm border border-light-subtle rounded p-4" style="max-width: 1200px; margin: 0 auto; background-color: #f8f9fa;">
 
         <h1 class="text-2xl font-bold mb-6 text-center text-gray-900">
             {{ $turma->evento->nome_evento ?? 'Erro ao carregar o nome do evento' }}
@@ -109,13 +109,13 @@
 </div>
     
 <div class="container my-1">
-    <div class="card shadow-sm border border-light-subtle rounded p-4 bg-white" style="max-width: 1200px; margin: 0 auto;">
+    <div class="card shadow-sm border border-light-subtle rounded p-4" style="max-width: 1200px; margin: 0 auto; background-color: #f8f9fa;">
         
         {{-- SEÇÃO DE INSTRUTORES --}}
         <div class="mb-5">
             <h5 class="fw-bold text-dark mb-3">Instrutores:</h5>
 
-            <div class="table-responsive border rounded">
+            <div class="table-responsive border rounded" style="background-color: #ffffff;">
                 <table class="table table-bordered mb-0 align-middle" style="font-size: 0.9rem;">
                     <thead class="table-light text-center">
                         <tr>
@@ -131,16 +131,18 @@
                                 <div class="d-flex justify-content-center gap-2">
                                     @if($turma->certificado_liberado == 1)
                                     {{-- Certificado liberado: botão de emissão ativo --}}
-                                    <button class="btn btn-outline-success btn-sm px-3">
+                                    <a href="{{ route('certificado.emitir', $instrutor->id_pessoa) }}?turma={{ $turma->id_turma }}&tipo=instrutor"
+                                       target="_blank" class="btn btn-outline-success btn-sm px-3">
                                         <i class="bi bi-file-earmark-check me-1"></i>Emitir Certificado
-                                    </button>
+                                    </a>
                                     @else
                                     {{-- Certificado não liberado: botão de exclusão ou pendente --}}
                                     @if($turma->id_situacao_turma >= 3)
                                     <button class="btn btn-outline-secondary btn-sm px-3" disabled title="Aguardando liberação da assinatura.">
                                         <i class="bi bi-hourglass-split me-1"></i>Certificado Pendente
                                     </button>
-                                    @else
+                                    @endif
+                                    @endif
                                     <form action="{{ route('turmas.removerInstrutor', [$turma->id_turma ?? $turma->id, $instrutor->id_pessoa]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -148,14 +150,12 @@
                                             <i class="bi bi-person-dash"></i> Excluir Instrutor
                                         </button>
                                     </form>
-                                    @endif
-                                    @endif
                                 </div>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="2" class="text-center text-muted py-4 font-italic bg-white">
+                            <td colspan="2" class="text-center text-muted py-4 font-italic">
                                 Este evento ainda não tem instrutores selecionados.
                             </td>
                         </tr>
@@ -179,7 +179,7 @@
                 Alunos ({{ $turma->alunos->count() }}/20):
             </h5>
 
-            <div class="table-responsive border rounded">
+            <div class="table-responsive border rounded" style="background-color: #ffffff;">
                 <table class="table table-bordered mb-0 align-middle" style="font-size: 0.9rem;">
                     <thead class="table-light text-center">
                         <tr>
@@ -197,9 +197,10 @@
                                 <div class="d-flex justify-content-center gap-2">
                                     @if($turma->certificado_liberado == 1)
                                     {{-- Certificado liberado: botão de emissão ativo --}}
-                                    <button class="btn btn-outline-success btn-sm px-3">
+                                    <a href="{{ route('certificado.emitir', $aluno->id_pessoa) }}?turma={{ $turma->id_turma }}&tipo=aluno"
+                                       target="_blank" class="btn btn-outline-success btn-sm px-3">
                                         <i class="bi bi-file-earmark-check me-1"></i>Emitir Certificado
-                                    </button>
+                                    </a>
                                     <button class="btn btn-outline-primary btn-sm px-3">
                                         <i class="bi bi-download me-1"></i>Baixar Frequência da Turma
                                     </button>
@@ -209,7 +210,8 @@
                                     <button class="btn btn-outline-secondary btn-sm px-3" disabled title="Aguardando liberação da assinatura.">
                                         <i class="bi bi-hourglass-split me-1"></i>Certificado Pendente
                                     </button>
-                                    @else
+                                    @endif
+                                    @endif
                                     <form action="{{ route('turmas.removerAluno', [$turma->id_turma ?? $turma->id, $aluno->id_pessoa]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -217,14 +219,12 @@
                                             <i class="bi bi-person-dash"></i> Excluir Aluno
                                         </button>
                                     </form>
-                                    @endif
-                                    @endif
                                 </div>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="3" class="text-center text-muted py-4 font-italic bg-white">
+                            <td colspan="3" class="text-center text-muted py-4 font-italic">
                                 Este evento ainda não tem alunos inscritos.
                             </td>
                         </tr>
@@ -378,4 +378,4 @@
         configurarFiltro('buscaAluno', 'tabelaAlunosModal');
     });
 </script>
-@endsection
+@endsection 
