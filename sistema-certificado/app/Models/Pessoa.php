@@ -19,4 +19,4 @@
         return $this -> belongsTo(Lotacao::class, 'id_lotacao', 'id_lotacao');
     }
     }
-    //['nome_pessoa', 'cpf', 'matricula', 'lotacao', 'data_nascimento']
+   

@@ -175,7 +175,6 @@
 
 </div>
 
-<!-- Modal de Edição Adicionado -->
 <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -240,7 +239,6 @@
 <script>
     $(document).ready(function() {
         $('.btn-editar').on('click', function() {
-            // Pegando os dados do botão ao tentar editar
             const id_usuario = $(this).data('id');
             const login_usuario = $(this).data('login');
             const senha_usuario = $(this).data('senha');;
@@ -249,14 +247,12 @@
 
 
 
-            // Preenchendo os campos do modal com os dados
             $('#editLogin').val(login_usuario);
             $('#editSenha').val(senha_usuario);
             $('#editTipoUsuario').val(id_tipo_usuario);
             $('#ativo').val(ativo);
 
 
-            // Ajustando a URL do formulário para o ID correto
             let url = "{{ route('usuarios.update', ':id') }}";
             url = url.replace(':id', id_usuario);
             $('#formEditarPessoa').attr('action', url);
@@ -270,7 +266,6 @@
 
                 $('#nomeLoginExcluir').text(login_usuario);
 
-                // Usamos :id_usuario para casar com a sua rota do web.php
                 let url = "{{ route('usuarios.destroy', ':id_usuario') }}";
                 url = url.replace(':id_usuario', id_usuario);
 

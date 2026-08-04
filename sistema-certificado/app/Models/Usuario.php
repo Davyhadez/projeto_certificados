@@ -34,10 +34,10 @@ class Usuario extends Authenticatable {
         return $this->hasOneThrough(
             Lotacao::class,
             Pessoa::class,
-            'id_pessoa',      // Foreign key on Pessoa table to Usuario
-            'id_lotacao',     // Foreign key on Lotacao table to Pessoa
-            'id_pessoa',      // Local key on Usuario
-            'id_lotacao'      // Local key on Pessoa
+            'id_pessoa',      
+            'id_lotacao',    
+            'id_pessoa',      
+            'id_lotacao'     
         );
     }
 

@@ -19,7 +19,7 @@ class DisciplinaController extends Controller
             'nome_disciplina' => $request->nome_disciplina,
             'carga_horaria' => $request->carga_horaria,
             'conteudo' => $request->conteudo,
-            'id_evento' => $id_evento // O ID vem da URL
+            'id_evento' => $id_evento 
         ]);
 
         return redirect()->back()->with('success', 'Disciplina adicionada com sucesso!');

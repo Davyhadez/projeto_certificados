@@ -1,21 +1,11 @@
-
-
-
-
-
-
-
-
 @extends('auth.dashboard')
 
-{{-- SEÇÃO DO BOTÃO VOLTAR --}}
 @section('voltarPessoas')
 <a href="{{route('turmas.index', $turma->id_turma)}}" class="btn-teal-voltar">
     <i class="bi bi-arrow-left"></i> Voltar
 </a>
 @endsection
 
-{{-- INÍCIO DA SEÇÃO DE CONTEÚDO PRINCIPAL --}}
 @section('conteudo') 
 
 <div class="container my-5">

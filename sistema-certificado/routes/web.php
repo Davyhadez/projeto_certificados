@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 // Redirecionamento Inicial
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect()->route('certificados.index');
 });
 
 
@@ -269,6 +269,23 @@ Route::delete('/assinaturas/{id}', [AssinaturaController::class, 'destroy'])
 Route::get('/certificado/emitir/{id}', [CertificadoController::class, 'emitirCertificado'])
     ->middleware('auth')
     ->name('certificado.emitir');
+
+
+
+// --- CONSULTAR CERTIFICADOS ---
+
+// --- GET ---
+Route::get('/consultar-certificados', [CertificadoController::class, 'index'])
+    ->name('certificados.index');
+
+// --- POST ---
+Route::post('/consultar-certificados', [CertificadoController::class, 'consultar'])
+    ->name('certificados.consultar');
+// --- PUT ---
+
+// --- DELETE ---
+
+
 
 // --- AUTENTICAÇÃO ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

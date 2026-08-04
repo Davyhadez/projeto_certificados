@@ -14,4 +14,9 @@ class Inscricao extends Model
         'data_inscricao', 'id_pessoa', 'id_turma', 
         'conceito', 'frequencia', 'codigo_certificado'
     ];
+
+    public function turma()
+    {
+        return $this->belongsTo(Turma::class, 'id_turma', 'id_turma');
+    }
 }

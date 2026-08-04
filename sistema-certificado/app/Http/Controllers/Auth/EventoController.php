@@ -92,8 +92,8 @@ class EventoController extends Controller
 
         // Prepara os dados para criação
         $dados = $request->only(['nome_evento', 'id_tipo_evento', 'carga_horaria']);
-        if ($request->id_tipo_evento == 1) { // Se for 'Curso'
-            $dados['carga_horaria'] = 0; // Força a carga horária para 0
+        if ($request->id_tipo_evento == 1) { 
+            $dados['carga_horaria'] = 0; 
         }
 
         Evento::create($dados);

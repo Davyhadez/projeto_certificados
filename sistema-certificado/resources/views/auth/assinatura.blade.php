@@ -154,7 +154,6 @@
                 });
             }, 5000);
 
-            // Modal confirmation logic
             const btnLiberar = document.querySelectorAll('.btn-liberar-assinatura');
             const modal = new bootstrap.Modal(document.getElementById('confirmarModal'));
             const form = document.getElementById('formConfirmar');
@@ -176,7 +175,6 @@
                 });
             });
 
-            // Prevent double submits
             $('#formConfirmar').on('submit', function() {
                 var botao = $(this).find('button[type="submit"]');
                 botao.prop('disabled', true);

@@ -57,37 +57,32 @@
         }
 
         @media (max-width: 768px) {
-            /* 1. Transforma a barra lateral em uma barra superior ou a esconde */
             .sidebar {
                 width: 100%;
                 min-height: auto;
-                position: relative; /* Sai do modo fixo para não cobrir o conteúdo */
+                position: relative; 
                 padding-bottom: 10px;
             }
 
-            /* Ajusta a logo do DETRAN para não ficar gigante no celular */
             .sidebar .detran {
                 max-width: 120px;
                 margin-top: 15px;
                 margin-bottom: 10px;
             }
 
-            /* 2. Força o conteúdo principal a ocupar a tela inteira */
             .main-content {
                 margin-left: 0 !important;
                 width: 100% !important;
             }
             
-            /* 3. Garante que as tabelas do Bootstrap fiquem roláveis lateralmente se não couberem */
             .table-responsive {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
             }
 
-            /* Estilo específico para a header-container em celulares */
             .header-container {
-                padding: 10px !important;            /* Diminui o espaçamento interno no celular */
-                justify-content: center !important;  /* Centraliza o conteúdo no celular */
+                padding: 10px !important;           
+                justify-content: center !important; 
             }
         }
 
@@ -323,6 +318,7 @@
             </div>
         </div>
     </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

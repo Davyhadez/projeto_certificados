@@ -47,7 +47,6 @@
                     <tbody>
                         @foreach($turma->alunos as $aluno)
                             @php
-                                // Verifica se o conceito atual na tabela pivô é Apto
                                 $isApto = Str::upper($aluno->pivot->conceito) === 'APTO';
                             @endphp
                             <tr>

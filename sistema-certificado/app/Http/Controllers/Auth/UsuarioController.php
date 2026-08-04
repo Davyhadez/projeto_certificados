@@ -47,7 +47,6 @@ class UsuarioController extends Controller
         // Busca a pessoa associada ao usuário, carregando a lotação
         $pessoa = Pessoa::with('lotacao')->findOrFail($usuario->id_pessoa);
 
-        // Retorna a sua nova view enviando os dados do usuário
         return view('auth.historicoUsuario', [
             'u' => $usuario,
             'pessoa' => $pessoa

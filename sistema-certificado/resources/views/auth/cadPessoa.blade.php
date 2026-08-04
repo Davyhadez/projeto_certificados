@@ -1,6 +1,6 @@
-@extends('auth.dashboard') {{-- Aqui ele puxa toda a interface pronta --}}
+@extends('auth.dashboard') 
 
-@section('conteudo') {{-- Tudo daqui para baixo vai aparecer no lugar do @yield --}}
+@section('conteudo') 
 
 @section('voltarPessoas')
     <a href="{{ route('pessoas.index') }}"

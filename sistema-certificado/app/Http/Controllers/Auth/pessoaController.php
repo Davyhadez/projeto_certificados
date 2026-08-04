@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PessoaController extends Controller
 {
-    // ESSENCIAL PARA O FUNCIONAMENTO DO SELECT DE LOTAÇÕES.
+    // PARA O FUNCIONAMENTO DO SELECT DE LOTAÇÕES.
     public function create()
     {
         $lotacoes = Lotacao::all();

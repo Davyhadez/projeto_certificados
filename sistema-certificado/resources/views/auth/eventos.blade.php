@@ -1,6 +1,6 @@
-@extends('auth.dashboard') {{-- Puxa o layout com a sidebar e header --}}
+@extends('auth.dashboard')
 
-@section('conteudo') {{-- O nome do seu @yield lá na dashboard deve ser 'conteudo' --}}
+@section('conteudo')
 
 <div class="card shadow-sm border-1 p-4">
     <div class="card shadow-sm border-0 p-1">
