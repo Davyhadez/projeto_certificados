@@ -9,8 +9,8 @@ class AssinaturaController extends Controller
 {
     private function checkAccess()
     {
-        if (!auth()->check() || (int)auth()->user()->id_tipo_usuario !== 3) {
-            return redirect()->route('dashboard')->with('error', 'Acesso negado: apenas usuários do tipo Gabinete podem acessar esta página.');
+        if (!auth()->check() || !in_array((int)auth()->user()->id_tipo_usuario, [2, 3])) {
+            return redirect()->route('dashboard')->with('error', 'Acesso negado: apenas usuários do tipo Treinamento ou Gabinete podem acessar esta página.');
         }
         return null;
     }

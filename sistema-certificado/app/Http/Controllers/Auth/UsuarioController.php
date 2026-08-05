@@ -7,8 +7,8 @@ use App\Models\Lotacao;
 use App\Models\Pessoa;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
@@ -41,10 +41,8 @@ class UsuarioController extends Controller
 
     public function show($id)
     {
-        // Busca o usuário ou retorna erro 404 se não existir
         $usuario = Usuario::findOrFail($id);
 
-        // Busca a pessoa associada ao usuário, carregando a lotação
         $pessoa = Pessoa::with('lotacao')->findOrFail($usuario->id_pessoa);
 
         return view('auth.historicoUsuario', [
@@ -69,7 +67,7 @@ class UsuarioController extends Controller
         Usuario::create([
             'id_pessoa'       => $request->id_pessoa,
             'login_usuario'   => $request->login_usuario,
-            'senha_usuario'   => md5($request->senha_usuario),
+            'senha_usuario'   => bcrypt($request->senha_usuario),
             'id_tipo_usuario' => $request->id_tipo_usuario,
             'ativo'           => $request->ativo
         ]);
@@ -80,7 +78,7 @@ class UsuarioController extends Controller
     public function update(Request $request, $id_usuario)
     {
         $request->validate([
-            'login_usuario'     => 'required|string|max:255',
+            'login_usuario'    => 'required|string|max:255',
             'senha_usuario'    => 'nullable|min:4',
             'id_tipo_usuario'  => 'required',
             'ativo'            => 'required'
@@ -92,7 +90,7 @@ class UsuarioController extends Controller
         $dados = $request->except(['senha_usuario']);
 
         if ($request->filled('senha_usuario')) {
-            $dados['senha_usuario'] = md5($request->input('senha_usuario'));
+            $dados['senha_usuario'] = bcrypt($request->input('senha_usuario'));
         }
 
         $usuario->update($dados);
@@ -107,21 +105,37 @@ class UsuarioController extends Controller
             'password_confirm' => 'required'
         ]);
 
-        if (md5($request->password_confirm) !== Auth::user()->senha_usuario) {
-            return back()->withErrors(['password_confirm' => 'Senha incorreta.'])->withInput();
+        $senha_valida = false;
+        if (strlen(Auth::user()->senha_usuario) === 32) {
+            $senha_valida = (md5($request->password_confirm) === Auth::user()->senha_usuario);
+        } else {
+            $senha_valida = Hash::check($request->password_confirm, Auth::user()->senha_usuario);
+        }
+
+        if (!$senha_valida) {
+            return redirect()->route('usuarios.index')->with('error', 'Senha incorreta!');
         }
 
 
         try {
             $usuario = Usuario::findOrFail($id_usuario);
-            $id_usuario = $usuario->id_usuario;
-            $usuario->delete();
+            
+            try {
+                // Tenta deletar fisicamente do banco
+                $usuario->delete();
+                $mensagem = 'Registro removido com sucesso!';
+            } catch (\Illuminate\Database\QueryException $e) {
+                // Se houver trava de chave estrangeira (código 23000), fazemos o Soft Delete (inativação)
+                if ($e->getCode() == 23000) {
+                    $usuario->ativo = 0;
+                    $usuario->save();
+                    $mensagem = 'O usuário não pode ser excluído por ter vínculos ativos (ex: Turmas). Ele foi INATIVADO com sucesso!';
+                } else {
+                    throw $e;
+                }
+            }
 
-            \App\Models\User::where('id_pessoa', $id_usuario)->delete();
-            $usuario = Usuario::findOrFail($id_usuario);
-            $usuario->delete();
-
-            return redirect()->route('usuarios.index')->with('success', 'Registro removido com sucesso!');
+            return redirect()->route('usuarios.index')->with('success', $mensagem);
         } catch (\Exception $e) {
             return back()->with('error', 'Não foi possível excluir: ' . $e->getMessage());
         }

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Historico;
 use App\Models\Lotacao;
 use App\Models\Pessoa;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PessoaController extends Controller
 {
-    // PARA O FUNCIONAMENTO DO SELECT DE LOTAÇÕES.
     public function create()
     {
         $lotacoes = Lotacao::all();
@@ -93,14 +91,21 @@ class PessoaController extends Controller
             'password_confirm' => 'required'
         ]);
 
-        if (md5($request->password_confirm) !== Auth::user()->senha_usuario) {
+        $senha_valida = false;
+        if (strlen(Auth::user()->senha_usuario) === 32) {
+            $senha_valida = (md5($request->password_confirm) === Auth::user()->senha_usuario);
+        } else {
+            $senha_valida = Hash::check($request->password_confirm, Auth::user()->senha_usuario);
+        }
+
+        if (!$senha_valida) {
             return back()->withErrors(['password_confirm' => 'Senha incorreta.'])->withInput();
         }
 
 
         try {
             $pessoa = Pessoa::findOrFail($id_pessoa);
-            \App\Models\User::where('id_pessoa', $id_pessoa)->delete();
+            \App\Models\Usuario::where('id_pessoa', $id_pessoa)->delete();
             $pessoa->delete();
 
             return redirect()->route('pessoas.index')->with('success', 'Registro removido com sucesso!');

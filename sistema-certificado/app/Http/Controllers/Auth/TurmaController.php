@@ -91,7 +91,6 @@ class TurmaController extends Controller
 
     public function show($id)
     {
-        dd("Entrou na rota CORRETA (show) com ID: " . $id);
 
         $turma = Turma::with(['evento', 'instrutores', 'alunos'])->findOrfail($id);
 

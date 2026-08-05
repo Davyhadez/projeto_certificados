@@ -151,7 +151,8 @@
             @endif
 
             <div class="mt-12 pt-6 border-t border-gray-100 text-center text-xs text-gray-400">
-                &copy; {{ date('Y') }} DETRAN-PA -  Todos os direitos reservados Desenvolvido pelo Departamento de Trânsito do Estado do Pará
+                &copy; {{ date('Y') }} DETRAN-PA -  Todos os direitos reservados<br>
+                 Desenvolvido pelo Departamento de Trânsito do Estado do Pará
             </div>
 
         </div>

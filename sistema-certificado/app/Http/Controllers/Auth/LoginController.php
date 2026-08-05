@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -22,20 +23,40 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
-        $user = DB::table('usuario')
+        $usuario = DB::table('usuario')
             -> where('login_usuario', $request->login_usuario)
-            -> 
-            first();
+            -> first();
 
-        if ($user && md5($request -> password) === $user -> senha_usuario) { 
+        $isValid = false;
+        
+        if ($usuario) {
+            // Se a senha no banco tiver 32 caracteres (tamanho padrão de MD5)
+            if (strlen($usuario->senha_usuario) === 32) {
+                // Checa com md5 antigo
+                if (md5($request->password) === $usuario->senha_usuario) {
+                    $isValid = true;
+                    // Atualiza a senha no banco para o novo padrão Bcrypt
+                    DB::table('usuario')
+                        ->where('id_usuario', $usuario->id_usuario)
+                        ->update(['senha_usuario' => bcrypt($request->password)]);
+                }
+            } else {
+                // Se já estiver em Bcrypt, faz a validação padrão do Laravel
+                if (Hash::check($request->password, $usuario->senha_usuario)) {
+                    $isValid = true;
+                }
+            }
+        }
+
+        if ($isValid) { 
             
-            if ($user -> ativo != 1) {
+            if ($usuario -> ativo != 1) {
                 return back() -> withErrors([
                 'login_usuario' => "Usuário ou senha inválidos.",
                 ]);
             }
 
-            Auth::loginUsingId($user -> id_usuario);
+            Auth::loginUsingId($usuario -> id_usuario);
 
             $request -> session() -> regenerate();
 
@@ -44,7 +65,7 @@ class LoginController extends Controller
 
         return back() -> withErrors([
             'login_usuario' => "Usuário ou senha inválidos.",
-        ]);
+        ]); 
     }
 
     public function logout(Request $request)
