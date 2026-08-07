@@ -17,7 +17,7 @@ class PessoaController extends Controller
     public function create()
     {
         $lotacoes = Lotacao::all();
-        return view('auth.cadPessoa', compact('lotacoes'));
+        return view ('auth.cadPessoa', compact('lotacoes'));
     }
 
     public function index(Request $request)

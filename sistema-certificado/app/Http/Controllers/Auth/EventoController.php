@@ -71,7 +71,7 @@ class EventoController extends Controller
 
         $cargaTotal = $evento->disciplinas->sum('carga_horaria');
 
-        return view('AUTH.detalhes-evento', compact('evento', 'cargaTotal'));
+        return view('auth.detalhes-evento', compact('evento', 'cargaTotal'));
     }
 
     public function store(Request $request)
